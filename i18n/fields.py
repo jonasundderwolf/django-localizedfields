@@ -96,8 +96,8 @@ class LocalizedFileField(LocalizedField):
         super(LocalizedField, self).__init__()
         field_class = kwargs.pop('field_class', models.FileField)
         self.verbose_name = kwargs.pop('verbose_name', None)
-        # always fallback to english version
-        self.fallback = True
+        # fallback to english version by default
+        self.fallback = kwargs.pop('fallback', True)
         # when we're localized, the field can always be empty in one language
         if 'blank' in kwargs:
             del kwargs['blank']
