@@ -16,3 +16,7 @@ def get_language():
 
     # return str not unicode so we can use it in a kwargs dictionary
     return str(language)
+
+
+def i18n_field(field):
+    return '%s_%s' % (field, get_language())
