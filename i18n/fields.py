@@ -138,3 +138,7 @@ class LocalizedURLField(LocalizedField):
     def __init__(self, *args, **kwargs):
         kwargs['fallback'] = kwargs.get('fallback', True)
         super(LocalizedURLField, self).__init__(models.URLField, *args, **kwargs)
+
+class LocalizedDecimalField(LocalizedField):
+    def __init__(self, *args, **kwargs):
+        super(LocalizedForeignKey, self).__init__(models.DecimalField, *args, **kwargs)
