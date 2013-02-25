@@ -8,20 +8,21 @@ from .utils import LANGUAGES, get_language
 def get_localized(self, lang, name):
     try:
         attr = getattr(self, '%s_%s' % (name, lang))
-    except AttributeError,  e:
+    except AttributeError, e:
         raise AttributeError(
-            'Either field "%s" does not exist, or language "%s" is not defined for this model. (%s)' % \
-                (name, lang, e)
+            'Either field "%s" does not exist, or language "%s" is not defined '
+            'for this model. (%s)' % (name, lang, e)
         )
     return attr
+
 
 def set_localized(self, lang, name, value):
     try:
         attr = setattr(self, '%s_%s' % (name, lang), value)
     except AttributeError, e:
         raise AttributeError(
-            'Either field "%s" does not exist, or language "%s" is not defined for this model. (%s)' % \
-                (name, lang, e)
+            'Either field "%s" does not exist, or language "%s" is not defined '
+            'for this model. (%s)' % (name, lang, e)
         )
     return attr
 
@@ -65,7 +66,7 @@ class LocalizedField(CompositeField):
         # get current value
         translation = getattr(model, self.prefix + get_language())
 
-        if self.fallback == False:
+        if self.fallback is False:
             # we don't fallback, return the value
             return translation
 
@@ -84,9 +85,11 @@ class LocalizedCharField(LocalizedField):
     def __init__(self, *args, **kwargs):
         super(LocalizedCharField, self).__init__(models.CharField, *args, **kwargs)
 
+
 class LocalizedTextField(LocalizedField):
     def __init__(self, *args, **kwargs):
         super(LocalizedTextField, self).__init__(models.TextField, *args, **kwargs)
+
 
 class LocalizedFileField(LocalizedField):
     def __init__(self, *args, **kwargs):
@@ -117,27 +120,33 @@ class LocalizedFileField(LocalizedField):
 
             self[language] = field_class(blank=True, *args, **kwargs)
 
+
 class LocalizedImageField(LocalizedFileField):
     def __init__(self, *args, **kwargs):
         kwargs['field_class'] = models.ImageField
         super(LocalizedImageField, self).__init__(models.ImageField, *args, **kwargs)
 
+
 class LocalizedBooleanField(LocalizedField):
     def __init__(self, *args, **kwargs):
         super(LocalizedBooleanField, self).__init__(models.BooleanField, *args, **kwargs)
+
 
 class LocalizedDateField(LocalizedField):
     def __init__(self, *args, **kwargs):
         super(LocalizedDateField, self).__init__(models.DateField, *args, **kwargs)
 
+
 class LocalizedForeignKey(LocalizedField):
     def __init__(self, *args, **kwargs):
         super(LocalizedForeignKey, self).__init__(models.ForeignKey, *args, **kwargs)
+
 
 class LocalizedURLField(LocalizedField):
     def __init__(self, *args, **kwargs):
         kwargs['fallback'] = kwargs.get('fallback', True)
         super(LocalizedURLField, self).__init__(models.URLField, *args, **kwargs)
+
 
 class LocalizedDecimalField(LocalizedField):
     def __init__(self, *args, **kwargs):
