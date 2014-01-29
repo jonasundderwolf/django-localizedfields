@@ -3,7 +3,6 @@ import re
 from django.contrib.admin import SimpleListFilter
 from django.conf import settings
 
-import reversion
 from .fields import LANGUAGES
 
 
@@ -33,7 +32,7 @@ class VisibilityFilter(SimpleListFilter):
         return queryset
 
 
-class TranslateableAdmin(reversion.VersionAdmin):
+class TranslateableAdminMixin(object):
     '''
     Mixin class that allows LocalizedFields in admin fieldsets declaration and
     sets them automatically correctly when necessary.
@@ -41,7 +40,7 @@ class TranslateableAdmin(reversion.VersionAdmin):
     list_display = ['__unicode__']
 
     def __init__(self, *args, **kwargs):
-        super(TranslateableAdmin, self).__init__(*args, **kwargs)
+        super(TranslateableAdminMixin, self).__init__(*args, **kwargs)
         self.list_filter = list(self.list_filter) + [TranslationFilter, VisibilityFilter]
         if 'linked_languages' not in self.list_display:
             self.list_display = list(self.list_display) + ['linked_languages']
