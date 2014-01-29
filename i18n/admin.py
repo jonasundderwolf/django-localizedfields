@@ -122,10 +122,7 @@ class TranslateableAdmin(reversion.VersionAdmin):
     linked_languages.allow_tags = True
     linked_languages.short_description = 'Languages'
 
-
     class Media:
         js = (
             'i18n/admin-languages.js',
-            'locking/admin-locking.js',
         )
-
