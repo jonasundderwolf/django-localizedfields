@@ -150,7 +150,7 @@ class LocalizedURLField(LocalizedField):
 
 class LocalizedDecimalField(LocalizedField):
     def __init__(self, *args, **kwargs):
-        super(LocalizedForeignKey, self).__init__(models.DecimalField, *args, **kwargs)
+        super(LocalizedDecimalField, self).__init__(models.DecimalField, *args, **kwargs)
 
 
 class LocalizedIntegerField(LocalizedField):
