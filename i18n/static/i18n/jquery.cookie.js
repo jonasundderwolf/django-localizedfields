@@ -69,4 +69,4 @@
 		return false;
 	};
 
-})(jQuery, document);
+})(django.jQuery, document);  // change for django usage
