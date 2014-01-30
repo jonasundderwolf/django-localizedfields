@@ -127,3 +127,6 @@ class TranslatableAdminMixin(object):
             'i18n/jquery.cookie.js',
             'i18n/admin-languages.js',
         )
+        css = {
+            'screen': ('i18n/admin-languages.css',)
+        }

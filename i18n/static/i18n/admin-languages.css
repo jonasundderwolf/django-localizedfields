@@ -1,0 +1,28 @@
+.vLargeTextField, .item-richtext {
+  width:300px !important;
+  height:120px !important;
+}
+.vTextField {
+  width:300px !important;
+}
+#language-selector label.translated {
+  text-decoration:underline;
+}
+#all_languages { float:left; }
+fieldset.language {
+  float: left;
+  width: 430px;
+  margin-right: 5px;
+}
+fieldset.language h2 {
+  height: 25px;
+  line-height: 25px;
+}
+div.item-content div.form-row {
+  float:left;
+  border-bottom:none;
+}
+div.item-content div.form-row[class$=_en] {
+  clear:left;
+}
+div.inline-group, #main_wrapper, .submit-row {clear:left;}
