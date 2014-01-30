@@ -1,11 +1,10 @@
 from django.db import models
 
-# import everything from fields, so one can simply import fields from here as well
-from .fields import *
+from .fields import LocalizedBooleanField
 from .utils import LANGUAGES, get_language
 
 
-class TranslateableModel(models.Model):
+class TranslatableModel(models.Model):
     translated_languages = models.CharField('Languages',
         max_length=50, blank=True, default='en')
     visible = LocalizedBooleanField(verbose_name='Visible', default=False)
@@ -31,4 +30,3 @@ class TranslateableModel(models.Model):
 
     class Meta:
         abstract = True
-
