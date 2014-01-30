@@ -11,8 +11,8 @@
       show_translations = 'en,' + RegExp.$1;
     }
     // add button to make all language versions visible
-    $('div.visible_en')
-      .prepend('<div class="field-box"><input id="id_visible_all" type="checkbox"> '
+    $('div.field-box.field-visible_en')
+      .before('<div class="field-box"><input id="id_visible_all" type="checkbox"> '
         + '<label for="id_visible_all" class="vCheckboxLabel">Visible (all)</label></div>');
     $('#id_visible_all').change(function() {
       if ($(this).is(':checked')) {
