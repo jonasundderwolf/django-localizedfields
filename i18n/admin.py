@@ -32,7 +32,7 @@ class VisibilityFilter(SimpleListFilter):
         return queryset
 
 
-class TranslateableAdminMixin(object):
+class TranslatableAdminMixin(object):
     '''
     Mixin class that allows LocalizedFields in admin fieldsets declaration and
     sets them automatically correctly when necessary.
@@ -40,13 +40,14 @@ class TranslateableAdminMixin(object):
     list_display = ['__unicode__']
 
     def __init__(self, *args, **kwargs):
-        super(TranslateableAdminMixin, self).__init__(*args, **kwargs)
+        super(TranslatableAdminMixin, self).__init__(*args, **kwargs)
         self.list_filter = list(self.list_filter) + [TranslationFilter, VisibilityFilter]
         if 'linked_languages' not in self.list_display:
             self.list_display = list(self.list_display) + ['linked_languages']
 
     def get_fieldsets(self, request, obj=None):
-        fieldsets = super(TranslateableAdmin, self).get_fieldsets(request, obj)
+        fieldsets = super(TranslatableAdminMixin, self).get_fieldsets(request,
+                                                                      obj)
 
         # group fieldsets by language
         localized_fieldsets = dict([
