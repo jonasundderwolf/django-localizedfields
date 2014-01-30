@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 from .fields import LocalizedBooleanField
 from .utils import LANGUAGES, get_language
@@ -6,7 +7,7 @@ from .utils import LANGUAGES, get_language
 
 class TranslatableModel(models.Model):
     translated_languages = models.CharField('Languages',
-        max_length=50, blank=True, default='en')
+        max_length=50, blank=True, default=settings.LANGUAGE_CODE)
     visible = LocalizedBooleanField(verbose_name='Visible', default=False)
 
     objects = models.Manager()

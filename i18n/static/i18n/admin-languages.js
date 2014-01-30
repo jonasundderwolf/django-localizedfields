@@ -6,12 +6,12 @@
     var translation_field = $('div.field-translated_languages')
       .hide()
       .find('input');
-    var show_translations = $.cookie('admin_translations') || 'en';
+    var show_translations = $.cookie('admin_translations') || LANGUAGE_CODE;
     if (window.location.search.match(/lang=(\w{2})/)) {
-      show_translations = 'en,' + RegExp.$1;
+      show_translations = LANGUAGE_CODE + ',' + RegExp.$1;
     }
     // add button to make all language versions visible
-    $('div.field-box.field-visible_en')
+    $($('div[class*=field-visible][class*=field-box]')[0])  // bevor the first checkbox
       .before('<div class="field-box"><input id="id_visible_all" type="checkbox"> '
         + '<label for="id_visible_all" class="vCheckboxLabel">Visible (all)</label></div>');
     $('#id_visible_all').change(function() {
@@ -38,7 +38,7 @@
     var translations = translation_field.val();
     $.each(LANGUAGES, function() {
       var lang = this[0], name = this[1];
-      if (lang == 'en') {return;}
+      if (lang == LANGUAGE_CODE) {return;}
       var translated = '', visible = '';
       if (show_translations.indexOf(lang) > -1) {
         visible = 'checked="checked""'
@@ -63,7 +63,7 @@
     show_hide_elements(show_translations, translation_field.val());
 
     $('#language-selector input').click(function(e) {
-      var show_translations = 'en';
+      var show_translations = LANGUAGE_CODE;
       $('#language-selector input:checked').each(function() {
         show_translations += ',' + $(this).val();
       });
@@ -83,7 +83,7 @@
         translation_field.val(translation_field.val().replace(',' + lang, ''));
       }
 
-      show_hide_elements($.cookie('admin_translations') || 'en',
+      show_hide_elements($.cookie('admin_translations') || LANGUAGE_CODE,
           translation_field.val());
     });
 
@@ -91,7 +91,7 @@
     if (typeof(contentblock_init_handlers) != 'undefined') {
       contentblock_init_handlers.push(function() {
         show_hide_elements(
-          $.cookie('admin_translations') || 'en',
+          $.cookie('admin_translations') || LANGUAGE_CODE,
           translation_field.val()
         );
       });
@@ -102,7 +102,7 @@
     // loop over fields and show/hide as appropriate
     $.each(LANGUAGES, function() {
       var lang = this[0], name = this[1];
-      if (lang == 'en') {return;}
+      if (lang == LANGUAGE_CODE) {return;}
       var elements = $('fieldset.language.' + lang);
       var feincms_elements = $('div.item-content div.form-row[class$=_' + lang + ']');
 
