@@ -124,5 +124,6 @@ class TranslatableAdminMixin(object):
 
     class Media:
         js = (
+            'i18n/jquery.cookie.js',
             'i18n/admin-languages.js',
         )
