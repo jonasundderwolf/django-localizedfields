@@ -22,7 +22,4 @@ div.item-content div.form-row {
   float:left;
   border-bottom:none;
 }
-div.item-content div.form-row[class$=_en] {
-  clear:left;
-}
 div.inline-group, #main_wrapper, .submit-row {clear:left;}

@@ -94,6 +94,11 @@
           $.cookie('admin_translations') || LANGUAGE_CODE,
           translation_field.val()
         );
+        // languages should be next to each in feincms contents
+        // clear the left float on the primary language
+        $('#main > div .form-row').filter(function () {
+          return $(this).attr('class').indexOf('_'+LANGUAGE_CODE) > 0;
+        }).css('clear', 'left');
       });
     }
   });
