@@ -97,11 +97,27 @@
           $.cookie('admin_translations') || LANGUAGE_CODE,
           translation_field.val()
         );
+
+        var def_lang_fields = $('#main > div fieldset.module:not(.lang-processed) > .form-row').filter(function () {
+          return $(this).attr('class').indexOf('_'+LANGUAGE_CODE) > 0;
+        })
         // languages should be next to each in feincms contents
         // clear the left float on the primary language
-        $('#main > div .form-row').filter(function () {
-          return $(this).attr('class').indexOf('_'+LANGUAGE_CODE) > 0;
-        }).css('clear', 'left');
+        def_lang_fields.css('clear', 'left');
+
+        // primary language should be in first place
+        def_lang_fields.each(function () {
+          var el = $(this);
+          var p = el.parent();
+          var new_index = $(el).index() - (LANGUAGES.length - 1);
+          el.detach();
+          el.insertBefore(p.children()[new_index]);
+        });
+
+        // prevent multiple execution
+        def_lang_fields.each(function () {
+          $(this).closest('fieldset').addClass('lang-processed');
+        });
       });
     }
   });
