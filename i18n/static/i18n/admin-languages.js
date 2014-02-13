@@ -60,6 +60,9 @@
     html += '</div></div>'
 
     $('#content').prepend(html);
+    // move default language to first position
+    $('fieldset.language.' + LANGUAGE_CODE).prependTo($('#all_languages'));
+
     show_hide_elements(show_translations, translation_field.val());
 
     $('#language-selector input').click(function(e) {
