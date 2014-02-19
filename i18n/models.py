@@ -2,7 +2,13 @@ from django.db import models
 from django.conf import settings
 
 from .fields import LocalizedBooleanField
-from .utils import LANGUAGES, get_language
+from .utils import LANGUAGES, get_language, i18n_field
+
+
+class TranslatedManager(models.Manager):
+    def get_query_set(self):
+        return super(TranslatedManager, self).get_query_set().filter(
+            **{i18n_field('visible'): True})
 
 
 class TranslatableModel(models.Model):
@@ -11,6 +17,7 @@ class TranslatableModel(models.Model):
     visible = LocalizedBooleanField(verbose_name='Visible', default=False)
 
     objects = models.Manager()
+    local = TranslatedManager()
 
     @classmethod
     def translated_fields(cls):
