@@ -9,7 +9,11 @@
   text-decoration:underline;
 }
 #all_languages { float:left; }
+fieldset.module {
+  clear: left;
+}
 fieldset.language {
+  clear: none;
   float: left;
   width: 430px;
   margin-right: 5px;
