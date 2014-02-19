@@ -4,6 +4,7 @@ from django.utils.translation import get_language as django_get_language
 
 LANGUAGES = [lang for lang, name in settings.LANGUAGES]
 
+
 def localized_field_names(field):
     return ['%s_%s' % (field, lang) for lang in LANGUAGES]
 
@@ -20,3 +21,10 @@ def get_language():
 
 def i18n_field(field):
     return '%s_%s' % (field, get_language())
+
+
+def first_value(instance, field):
+    for lang in LANGUAGES:
+        val = instance.get_localized(lang, field)
+        if val:
+            return val
