@@ -62,7 +62,7 @@ class TranslatableAdminMixin(object):
         remove_fieldsets = []
 
         for o, (name, attrs) in enumerate(fieldsets):
-            if name == 'English':
+            if name == dict(settings.LANGUAGES)[settings.LANGUAGE_CODE]:
                 # language fieldsets exist already, skip - we already reworked this form
                 return fieldsets
             to_remove = []
