@@ -25,5 +25,6 @@ fieldset.language h2 {
 div.item-content div.form-row {
   float:left;
   border-bottom:none;
+  overflow: visible;
 }
 div.inline-group, #main_wrapper, .submit-row {clear:left;}
