@@ -8,7 +8,7 @@ from .utils import LANGUAGES, get_language
 def get_localized(self, lang, name):
     try:
         attr = getattr(self, '%s_%s' % (name, lang))
-    except AttributeError, e:
+    except AttributeError as e:
         raise AttributeError(
             'Either field "%s" does not exist, or language "%s" is not defined '
             'for this model. (%s)' % (name, lang, e)
@@ -19,7 +19,7 @@ def get_localized(self, lang, name):
 def set_localized(self, lang, name, value):
     try:
         attr = setattr(self, '%s_%s' % (name, lang), value)
-    except AttributeError, e:
+    except AttributeError as e:
         raise AttributeError(
             'Either field "%s" does not exist, or language "%s" is not defined '
             'for this model. (%s)' % (name, lang, e)
@@ -52,7 +52,7 @@ class LocalizedField(CompositeField):
             self.verbose_name = field_name.replace('_', ' ').capitalize()
 
         for language in self:
-            self[language].verbose_name = u'%s (%s)' % (self.verbose_name, language)
+            self[language].verbose_name = '%s (%s)' % (self.verbose_name, language)
             # Save a reference to the composite field for later use
             self[language].composite_field = self
 

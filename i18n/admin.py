@@ -68,7 +68,7 @@ class TranslatableAdminMixin(object):
             to_remove = []
             attrs['fields'] = list(attrs['fields'])
             for i, field in enumerate(attrs['fields']):
-                if isinstance(field, basestring):
+                if isinstance(field, str):
                     match = re.match(r'^(.*)_([a-z]{2})$', field)
                     if match:
                         if match.group(1) == 'visible':
