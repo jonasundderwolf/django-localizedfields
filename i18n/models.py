@@ -28,7 +28,7 @@ class TranslatableModel(models.Model):
                     fields.append(field.composite_field.field_name)
         return fields
 
-    def __unicode__(self, title_attr='title'):
+    def __str__(self, title_attr='title'):
         if hasattr(self, title_attr):
             for lang in [get_language()] + LANGUAGES:
                 title = self.get_localized(lang, title_attr)

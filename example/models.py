@@ -16,7 +16,7 @@ class Document(TranslatableModel):
     decimalfield = i18n.LocalizedDecimalField(max_digits=4, decimal_places=2)
     integerfield = i18n.LocalizedIntegerField()
 
-    def __unicode__(self):
+    def __str__(self):
         return '%d, %s' % (self.pk, self.charfield)
 
     class Meta:

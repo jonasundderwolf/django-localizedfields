@@ -37,7 +37,7 @@ class TranslatableAdminMixin(object):
     Mixin class that allows LocalizedFields in admin fieldsets declaration and
     sets them automatically correctly when necessary.
     '''
-    list_display = ['__unicode__']
+    list_display = ['__str__']
 
     def __init__(self, *args, **kwargs):
         super(TranslatableAdminMixin, self).__init__(*args, **kwargs)
