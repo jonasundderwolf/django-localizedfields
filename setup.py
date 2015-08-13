@@ -8,7 +8,7 @@ setup(
     version='0.2',
     packages=find_packages(),
     package_data=finddata.find_package_data(),
-    install_requires=('django-composite-field==0.5.1'),
+    install_requires=('django-composite-field==0.3'),
     include_package_data=True,
     classifiers = [
         'Development Status :: 4 - Beta',
