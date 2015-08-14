@@ -12,8 +12,8 @@ class TranslatedManager(models.Manager):
 
 
 class TranslatableModel(models.Model):
-    translated_languages = models.CharField('Languages',
-        max_length=50, blank=True, default=settings.LANGUAGE_CODE)
+    translated_languages = models.CharField(
+        'Languages', max_length=50, blank=True, default=settings.LANGUAGE_CODE)
     visible = LocalizedBooleanField(verbose_name='Visible', default=False)
 
     objects = models.Manager()
