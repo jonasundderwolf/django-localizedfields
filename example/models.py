@@ -9,7 +9,7 @@ class Document(TranslatableModel):
     textfield = i18n.LocalizedTextField(max_length=500, blank=True)
     filefield = i18n.LocalizedFileField(null=True, upload_to='files', blank=True)
     imagefield = i18n.LocalizedImageField(null=True, upload_to='images', blank=True)
-    booleanfield = i18n.LocalizedBooleanField()
+    # booleanfield = i18n.LocalizedBooleanField()
     datefield = i18n.LocalizedDateField(blank=True, null=True)
     fkfield = i18n.LocalizedForeignKey('self', null=True, blank=True,
                                        related_name='+')
