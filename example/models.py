@@ -1,8 +1,10 @@
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 import i18n
 from i18n.models import TranslatableModel
 
 
+@python_2_unicode_compatible
 class Document(TranslatableModel):
     untranslated_charfield = models.CharField(max_length=50, blank=True)
     charfield = i18n.LocalizedCharField(max_length=50)

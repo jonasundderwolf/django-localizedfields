@@ -2,6 +2,7 @@ import re
 
 from django.contrib.admin import SimpleListFilter
 from django.conf import settings
+from django.utils.six import string_types
 
 from .fields import LANGUAGES
 
@@ -68,7 +69,7 @@ class TranslatableAdminMixin(object):
             to_remove = []
             attrs['fields'] = list(attrs['fields'])
             for i, field in enumerate(attrs['fields']):
-                if isinstance(field, str):
+                if isinstance(field, string_types):
                     match = re.match(r'^(.*)_([a-z]{2})$', field)
                     if match:
                         if match.group(1) == 'visible':

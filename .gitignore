@@ -2,4 +2,6 @@
 *.pyc
 *.egg-info
 *.cache
+*.orig
+*.sql
 example/media/*
