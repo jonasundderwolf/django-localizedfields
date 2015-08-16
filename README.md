@@ -1,1 +1,1 @@
-Run tests with `py.test`
+Run tests with `tox`
