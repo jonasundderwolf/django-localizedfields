@@ -74,12 +74,14 @@ class TranslatableAdminMixin(object):
                     if match:
                         if match.group(1) == 'visible':
                             if match.group(2) == settings.LANGUAGE_CODE:
-                                attrs['fields'][i] = tuple(['visible_%s' % lang for lang in LANGUAGES])
+                                attrs['fields'][i] = tuple(
+                                    ['visible_%s' % lang for lang in LANGUAGES])
                             else:
                                 to_remove.append(i)
                         elif match.group(2) == settings.LANGUAGE_CODE:
                             for lang in LANGUAGES:
-                                localized_fieldsets[lang][1]['fields'].append('%s_%s' % (match.group(1), lang))
+                                localized_fieldsets[lang][1]['fields'].append(
+                                    '%s_%s' % (match.group(1), lang))
                             to_remove.append(i)
                         elif match.group(2) in LANGUAGES:
                             to_remove.append(i)

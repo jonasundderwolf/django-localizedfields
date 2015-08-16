@@ -8,7 +8,7 @@ setup(
     packages=find_packages(),
     install_requires=('django-composite-field==0.3'),
     include_package_data=True,
-    classifiers = [
+    classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Framework :: Django',

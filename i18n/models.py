@@ -7,8 +7,9 @@ from .utils import LANGUAGES, get_language, i18n_field
 
 
 class TranslatedManager(models.Manager):
+
     def get_query_set(self):
-        return super(TranslatedManager, self).get_query_set().filter(
+        return super(TranslatedManager, self).get_queryset().filter(
             **{i18n_field('visible'): True})
 
 

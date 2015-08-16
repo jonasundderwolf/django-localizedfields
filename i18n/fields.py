@@ -29,6 +29,7 @@ def set_localized(self, lang, name, value):
 
 
 class LocalizedField(CompositeField):
+
     def __init__(self, field_class, *args, **kwargs):
         '''
         Adds a model field of type "field_class" with translations for all languages.
@@ -83,16 +84,19 @@ class LocalizedField(CompositeField):
 
 
 class LocalizedCharField(LocalizedField):
+
     def __init__(self, *args, **kwargs):
         super(LocalizedCharField, self).__init__(models.CharField, *args, **kwargs)
 
 
 class LocalizedTextField(LocalizedField):
+
     def __init__(self, *args, **kwargs):
         super(LocalizedTextField, self).__init__(models.TextField, *args, **kwargs)
 
 
 class LocalizedFileField(LocalizedField):
+
     def __init__(self, *args, **kwargs):
         # call the grandparent's init()
         upload_to_params = kwargs.pop('upload_to_params', None)
@@ -123,37 +127,44 @@ class LocalizedFileField(LocalizedField):
 
 
 class LocalizedImageField(LocalizedFileField):
+
     def __init__(self, *args, **kwargs):
         kwargs['field_class'] = models.ImageField
         super(LocalizedImageField, self).__init__(models.ImageField, *args, **kwargs)
 
 
 class LocalizedBooleanField(LocalizedField):
+
     def __init__(self, *args, **kwargs):
         super(LocalizedBooleanField, self).__init__(models.BooleanField, *args, **kwargs)
 
 
 class LocalizedDateField(LocalizedField):
+
     def __init__(self, *args, **kwargs):
         super(LocalizedDateField, self).__init__(models.DateField, *args, **kwargs)
 
 
 class LocalizedForeignKey(LocalizedField):
+
     def __init__(self, *args, **kwargs):
         super(LocalizedForeignKey, self).__init__(models.ForeignKey, *args, **kwargs)
 
 
 class LocalizedURLField(LocalizedField):
+
     def __init__(self, *args, **kwargs):
         kwargs['fallback'] = kwargs.get('fallback', True)
         super(LocalizedURLField, self).__init__(models.URLField, *args, **kwargs)
 
 
 class LocalizedDecimalField(LocalizedField):
+
     def __init__(self, *args, **kwargs):
         super(LocalizedDecimalField, self).__init__(models.DecimalField, *args, **kwargs)
 
 
 class LocalizedIntegerField(LocalizedField):
+
     def __init__(self, *args, **kwargs):
         super(LocalizedIntegerField, self).__init__(models.IntegerField, *args, **kwargs)
