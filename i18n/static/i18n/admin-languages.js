@@ -105,15 +105,6 @@
         // clear the left float on the primary language
         def_lang_fields.css('clear', 'left');
 
-        // primary language should be in first place
-        def_lang_fields.each(function () {
-          var el = $(this);
-          var p = el.parent();
-          var new_index = $(el).index() - (LANGUAGES.length - 1);
-          el.detach();
-          el.insertBefore(p.children()[new_index]);
-        });
-
         // prevent multiple execution
         def_lang_fields.each(function () {
           $(this).closest('fieldset').addClass('lang-processed');
