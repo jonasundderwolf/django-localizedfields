@@ -2,6 +2,7 @@ import re
 
 from django.contrib.admin import SimpleListFilter
 from django.conf import settings
+from django.forms import widgets
 from django.utils.six import string_types
 
 from .fields import LANGUAGES
@@ -125,11 +126,12 @@ class TranslatableAdminMixin(object):
     linked_languages.allow_tags = True
     linked_languages.short_description = 'Languages'
 
-    class Media:
+    @property
+    def media(self):
+        css = {'all': ('i18n/admin-languages.css',)}
         js = (
             'i18n/jquery.cookie.js',
             'i18n/admin-languages.js',
         )
-        css = {
-            'screen': ('i18n/admin-languages.css',)
-        }
+
+        return super(TranslatableAdminMixin, self).media + widgets.Media(css=css, js=js)
