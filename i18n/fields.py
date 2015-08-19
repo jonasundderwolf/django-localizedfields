@@ -3,7 +3,7 @@ from django.conf import settings
 from django.db import models
 
 from composite_field.base import CompositeField
-from .utils import LANGUAGES, get_language
+from .utils import LANGUAGES, get_language, LanguageAwareUploadToDirectory
 
 
 def get_localized(self, lang, name):
@@ -114,14 +114,10 @@ class LocalizedFileField(LocalizedField):
         kwargs['max_length'] = 255
 
         for language in LANGUAGES:
-            if upload_to_params:
-                from southstream.utils.storage import upload_to
-                kwargs['upload_to'] = upload_to(
-                    upload_to_params[0],
-                    upload_to_params[1],
-                    *upload_to_params[2:],
-                    language=language
-                )
+            if not upload_to_params:
+                upload_to_params = {}
+            upload_to_params.update({'language': language})
+            kwargs['upload_to'] = LanguageAwareUploadToDirectory(**upload_to_params)
 
             self[language] = field_class(blank=True, *args, **kwargs)
 
