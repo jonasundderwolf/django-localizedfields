@@ -19,7 +19,7 @@ def get_language():
     return str(language)
 
 
-def i18n_field(field):
+def localized_field(field):
     return '%s_%s' % (field, get_language())
 
 

@@ -127,9 +127,9 @@ class TranslatableAdminMixin(object):
 
     class Media:
         js = (
-            'i18n/jquery.cookie.js',
-            'i18n/admin-languages.js',
+            'localizedfields/jquery.cookie.js',
+            'localizedfields/localizedfields.js',
         )
         css = {
-            'screen': ('i18n/admin-languages.css',)
+            'screen': ('localizedfields/localizedfields.css',)
         }

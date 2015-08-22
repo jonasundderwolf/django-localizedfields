@@ -3,14 +3,14 @@ from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
 
 from .fields import LocalizedBooleanField
-from .utils import LANGUAGES, get_language, i18n_field
+from .utils import LANGUAGES, get_language, localized_field
 
 
 class TranslatedManager(models.Manager):
 
     def get_query_set(self):
         return super(TranslatedManager, self).get_queryset().filter(
-            **{i18n_field('visible'): True})
+            **{localized_field('visible'): True})
 
 
 @python_2_unicode_compatible
