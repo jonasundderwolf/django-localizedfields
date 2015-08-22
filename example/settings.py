@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'i18n',
+    'localizedfields',
     'django.contrib.admin',
     'example',
 ]
