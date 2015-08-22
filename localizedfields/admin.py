@@ -128,10 +128,10 @@ class TranslatableAdminMixin(object):
 
     @property
     def media(self):
-        css = {'all': ('i18n/admin-languages.css',)}
+        css = {'all': ('i18n/localizedfields.css',)}
         js = (
-            'i18n/jquery.cookie.js',
-            'i18n/admin-languages.js',
+            'localizedfields/jquery.cookie.js',
+            'localizedfields/localizedfields.js',
         )
 
         return super(TranslatableAdminMixin, self).media + widgets.Media(css=css, js=js)

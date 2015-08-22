@@ -1,5 +1,5 @@
 from django.contrib import admin
-from i18n.admin import TranslatableAdminMixin
+from localizedfields.admin import TranslatableAdminMixin
 from .models import Document
 
 
