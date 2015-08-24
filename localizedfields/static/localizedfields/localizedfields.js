@@ -10,6 +10,7 @@
     if (window.location.search.match(/lang=(\w{2})/)) {
       show_translations = LANGUAGE_CODE + ',' + RegExp.$1;
     }
+
     // add button to make all language versions visible
     $($('div[class*=field-visible][class*=field-box]')[0])  // bevor the first checkbox
       .before('<div class="field-box"><input id="id_visible_all" type="checkbox"> '
@@ -21,6 +22,7 @@
         $('input[name^=visible]').attr('checked', false);
       }
     });
+
     $('input[name^=visible]').change(function() {
       // check or uncheck "all visible" checkbox when applicable
       if ($(this).is(':checked')) {
@@ -33,33 +35,47 @@
     }).change();
     $('fieldset.language').wrapAll('<div id="all_languages"/>')
 
-    // ---- add checkboxes to turn display of individual languages on and off
+    // add checkboxes to turn display of individual languages on and off
     var html = '<div id="language-selector" class="inline-group"><div class="form-row">';
     var translations = translation_field.val();
     $.each(LANGUAGES, function() {
-      var lang = this[0], name = this[1];
+      var lang = this[0],
+          name = this[1];
+      // primary language can't be toggled
       if (lang == LANGUAGE_CODE) {return;}
-      var translated = '', visible = '';
-      if (show_translations.indexOf(lang) > -1) {
-        visible = 'checked="checked""'
-      }
-      if (translations.indexOf(lang) > -1) {
-        translated = 'class="translated"';
+      var translated = '',
+          show_fields_for_language = false;
+          fallback_active = true;
 
-        // show button to deactivate language
-        $('fieldset.language.' + lang + ' h2')
-          .append(' <input type="checkbox" name="activate_language" checked="checked" value="' + lang + '"/> Translated');
-      } else {
-        // show button to activate language
-        $('fieldset.language.' + lang + ' h2')
-          .append(' <input type="checkbox" name="activate_language" value="' + lang + '"/> Translated');
+      if (translations.indexOf(lang) > -1) {
+        fallback_active = false;
       }
-      html += '<input id="id_show_' + lang + '" type="checkbox"  name="show_language" value="' + lang + '" ' + visible + '" /> '
-        + '<label for="id_show_' + lang + '" ' + translated + '>' + name + ' (' + lang + ')</label>&nbsp;&nbsp;';
+
+      if (show_translations.indexOf(lang) > -1) {
+        show_fields_for_language = true;
+      }
+
+      var fallback_toggle_id = 'language-toggle-' + lang;
+      var fallback_title = 'Fallback to ' + LANGUAGE_CODE.toUpperCase();
+      var $fallback_toggle = $(
+        '<div class="language-toggle">' +
+        '<input type="checkbox" id=' + fallback_toggle_id + ' name="activate_language" ' + 
+        (fallback_active ? 'checked="checked"' : '') + ' value="' + lang +
+        '"/> <label for=' + fallback_toggle_id + '>' + fallback_title + '</label>' +
+        '</div>'
+      );
+
+      $('fieldset.language.' + lang + ' h2').append($fallback_toggle);
+
+      html += '<input id="id_show_' + lang + '" type="checkbox"  name="show_language" value="' + 
+        lang + '" ' + (show_fields_for_language ? 'checked="checked"' : '') + ' /> ' + '<label for="id_show_' + lang + '" ' +
+        (fallback_active ? 'class="translated"' : '') + '>' + name + ' (' + lang +
+        ')</label>&nbsp;&nbsp;';
     });
     html += '</div></div>'
 
     $('#content').prepend(html);
+
     // move default language to first position
     $('fieldset.language.' + LANGUAGE_CODE).prependTo($('#all_languages'));
 
@@ -78,7 +94,7 @@
       var $this = $(this);
       var lang = $this.val();
       $('#language-selector label[for=id_show_' + lang + ']').toggleClass('translated');
-      if ($this.is(':checked')) {
+      if (!$this.is(':checked')) {
         // activate language
         translation_field.val(translation_field.val() + ',' + lang);
       } else {
