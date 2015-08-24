@@ -41,3 +41,16 @@ div.inline-group, #main_wrapper, .submit-row {clear:left;}
   width: auto !important;
   margin: 0 5px 0 0;
 }
+
+#language-selector {
+  display: inline-block;
+  float: right;
+  margin-top: 0px;
+  padding: 0px;
+  border: 0px;
+}
+
+#language-selector .form-row {
+  padding: 1px;
+  border: 0px;
+}

@@ -36,7 +36,8 @@
     $('fieldset.language').wrapAll('<div id="all_languages"/>')
 
     // add checkboxes to turn display of individual languages on and off
-    var html = '<div id="language-selector" class="inline-group"><div class="form-row">';
+    var lang_selectors = '<div id="language-selector" class="inline-group">' +
+                         '<div class="form-row">Show translation tab for: ';
     var translations = translation_field.val();
     $.each(LANGUAGES, function() {
       var lang = this[0],
@@ -67,14 +68,14 @@
 
       $('fieldset.language.' + lang + ' h2').append($fallback_toggle);
 
-      html += '<input id="id_show_' + lang + '" type="checkbox"  name="show_language" value="' + 
+      lang_selectors += '<input id="id_show_' + lang + '" type="checkbox"  name="show_language" value="' + 
         lang + '" ' + (show_fields_for_language ? 'checked="checked"' : '') + ' /> ' + '<label for="id_show_' + lang + '" ' +
         (fallback_active ? 'class="translated"' : '') + '>' + name + ' (' + lang +
         ')</label>&nbsp;&nbsp;';
     });
-    html += '</div></div>'
+    lang_selectors += '</div></div>'
 
-    $('#content').prepend(html);
+    $('.breadcrumbs').append(lang_selectors);
 
     // move default language to first position
     $('fieldset.language.' + LANGUAGE_CODE).prependTo($('#all_languages'));
