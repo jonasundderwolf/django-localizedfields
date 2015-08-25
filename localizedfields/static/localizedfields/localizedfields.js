@@ -3,6 +3,8 @@
     // Shortcut, if there isn't any change form
     if (!$('body').hasClass('change-form')) {return;}
 
+    var fallback_toggle_label_color = $('fieldset.language h2').css('color');
+
     var translation_field = $('div.field-translated_languages')
       .hide()
       .find('input');
@@ -62,7 +64,7 @@
         '<div class="language-toggle">' +
         '<input type="checkbox" id=' + fallback_toggle_id + ' name="activate_language" ' + 
         (fallback_active ? 'checked="checked"' : '') + ' value="' + lang +
-        '"/> <label for=' + fallback_toggle_id + '>' + fallback_title + '</label>' +
+        '"/> <label style="color: ' + fallback_toggle_label_color + '" for=' + fallback_toggle_id + '>' + fallback_title + '</label>' +
         '</div>'
       );
 
