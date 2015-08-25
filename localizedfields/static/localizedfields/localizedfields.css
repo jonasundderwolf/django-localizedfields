@@ -54,3 +54,8 @@ div.inline-group, #main_wrapper, .submit-row {clear:left;}
   padding: 1px;
   border: 0px;
 }
+
+form fieldset.module.language p {
+  margin: 0;
+  padding: 1px;
+}
