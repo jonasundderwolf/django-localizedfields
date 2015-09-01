@@ -3,6 +3,12 @@
     // Shortcut, if there isn't any change form
     if (!$('body').hasClass('change-form')) {return;}
 
+    // trim language suffixes from labels
+    $("label").each(function(index){
+        var label = $(this);
+        label.text(label.text().replace(/\s+\(.+?\)/g, ''));
+    });
+
     var fallback_toggle_label_color = $('fieldset.language h2').css('color');
 
     var translation_field = $('div.field-translated_languages')
