@@ -8,7 +8,7 @@
     var translation_field = $('div.field-translated_languages')
       .hide()
       .find('input');
-    var show_translations = $.cookie('admin_translations') || LANGUAGE_CODE;
+    var show_translations = Cookies.get('admin_translations') || LANGUAGE_CODE;
     if (window.location.search.match(/lang=(\w{2})/)) {
       show_translations = LANGUAGE_CODE + ',' + RegExp.$1;
     }
@@ -89,7 +89,7 @@
       $('#language-selector input:checked').each(function() {
         show_translations += ',' + $(this).val();
       });
-      $.cookie('admin_translations', show_translations, {path: '/'});
+      Cookies.set('admin_translations', show_translations, {path: '/'});
       show_hide_elements(show_translations, translation_field.val());
     });
 
@@ -105,15 +105,15 @@
         translation_field.val(translation_field.val().replace(',' + lang, ''));
       }
 
-      show_hide_elements($.cookie('admin_translations') || LANGUAGE_CODE,
-          translation_field.val());
+      show_hide_elements(Cookies.get('admin_translations') || LANGUAGE_CODE,
+        translation_field.val());
     });
 
     // update FeinCMS content blocks
     if (typeof(contentblock_init_handlers) != 'undefined') {
       contentblock_init_handlers.push(function() {
         show_hide_elements(
-          $.cookie('admin_translations') || LANGUAGE_CODE,
+          Cookies.get('admin_translations') || LANGUAGE_CODE,
           translation_field.val()
         );
 

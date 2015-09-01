@@ -130,7 +130,7 @@ class TranslatableAdminMixin(object):
     def media(self):
         css = {'all': ('localizedfields/localizedfields.css',)}
         js = (
-            'localizedfields/jquery.cookie.js',
+            'localizedfields/js.cookie.min.js',
             'localizedfields/localizedfields.js',
         )
 
