@@ -3,16 +3,6 @@
     // Shortcut, if there isn't any change form
     if (!$('body').hasClass('change-form')) {return;}
 
-    // trim language suffixes from labels
-    $("label").each(function(index){
-      var label = $(this),
-        oldText = label.text(),
-        newText = oldText.replace(/\s+\(.+?\)/g, ''),
-        newHTML = label.html().replace(oldText, newText);
-      if (oldText.substring(0, 7) !== 'Visible'){
-        label.html(newHTML);
-      }
-    });
     var fallback_toggle_label_color = $('fieldset.language h2').css('color');
     var translation_field = $('div.field-translated_languages').hide().find('input');
     var show_translations = Cookies.get('admin_translations') || LANGUAGE_CODE;
@@ -138,6 +128,17 @@
         });
       });
     }
+
+    // trim language suffixes from labels
+    $("label").each(function(index){
+      var label = $(this),
+        oldText = label.text(),
+        newText = oldText.replace(/\s+\(.+?\)/g, ''),
+        newHTML = label.html().replace(oldText, newText);
+      if (oldText.substring(0, 7) !== 'Visible'){
+        label.html(newHTML);
+      }
+    });
   });
 
   function show_hide_elements(show_translations, translations) {
