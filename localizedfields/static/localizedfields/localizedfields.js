@@ -5,8 +5,10 @@
 
     // trim language suffixes from labels
     $("label").each(function(index){
-        var label = $(this);
-        label.text(label.text().replace(/\s+\(.+?\)/g, ''));
+        var label = $(this),
+            newText = label.text().replace(/\s+\(.+?\)/g, '');
+            newHTML = label.html().replace(label.text(), newText);
+        label.html(newHTML);
     });
 
     var fallback_toggle_label_color = $('fieldset.language h2').css('color');
