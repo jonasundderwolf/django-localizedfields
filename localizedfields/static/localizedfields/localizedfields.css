@@ -2,31 +2,40 @@
   width:300px !important;
   height:120px !important;
 }
+
 .vTextField {
   width:300px !important;
 }
+
 #language-selector label.translated {
   text-decoration:underline;
 }
-#all_languages { float:left; }
+
+#all_languages {float:left;}
+
 fieldset.module {
   clear: left;
 }
+
 fieldset.language {
   clear: none;
   float: left;
   width: 430px;
   margin-right: 5px;
 }
+
 fieldset.language h2 {
   height: 25px;
   line-height: 25px;
+  font-size: 12px;
 }
+
 div.item-content div.form-row {
   float:left;
   border-bottom:none;
   overflow: visible;
 }
+
 div.inline-group, #main_wrapper, .submit-row {clear:left;}
 
 .language-toggle {

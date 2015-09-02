@@ -5,18 +5,18 @@
 
     // trim language suffixes from labels
     $("label").each(function(index){
-        var label = $(this),
-            newText = label.text().replace(/\s+\(.+?\)/g, '');
-            newHTML = label.html().replace(label.text(), newText);
+      var label = $(this),
+        oldText = label.text(),
+        newText = oldText.replace(/\s+\(.+?\)/g, ''),
+        newHTML = label.html().replace(oldText, newText);
+      if (oldText.substring(0, 7) !== 'Visible'){
         label.html(newHTML);
+      }
     });
-
     var fallback_toggle_label_color = $('fieldset.language h2').css('color');
-
-    var translation_field = $('div.field-translated_languages')
-      .hide()
-      .find('input');
+    var translation_field = $('div.field-translated_languages').hide().find('input');
     var show_translations = Cookies.get('admin_translations') || LANGUAGE_CODE;
+
     if (window.location.search.match(/lang=(\w{2})/)) {
       show_translations = LANGUAGE_CODE + ',' + RegExp.$1;
     }
@@ -67,7 +67,7 @@
       }
 
       var fallback_toggle_id = 'language-toggle-' + lang;
-      var fallback_title = 'Fallback to ' + LANGUAGE_CODE.toUpperCase();
+      var fallback_title = 'Fallback to ' + LANGUAGES[0][1];
       var $fallback_toggle = $(
         '<div class="language-toggle">' +
         '<input type="checkbox" id=' + fallback_toggle_id + ' name="activate_language" ' + 
