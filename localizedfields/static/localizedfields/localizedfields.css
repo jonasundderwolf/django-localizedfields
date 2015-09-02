@@ -68,3 +68,14 @@ form fieldset.module.language p {
   margin: 0;
   padding: 1px;
 }
+
+fieldset.lang-processed label {
+  padding: 1px 1px 0 1px;
+  float: none;
+}
+
+fieldset.lang-processed > div {
+  background-color: #f8f8f8;
+  border-left: 1px dotted #cccccc;
+}
+
