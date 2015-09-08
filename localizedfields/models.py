@@ -8,7 +8,7 @@ from .utils import LANGUAGES, get_language, localized_field
 
 class TranslatedManager(models.Manager):
 
-    def get_query_set(self):
+    def get_queryset(self):
         return super(TranslatedManager, self).get_queryset().filter(
             **{localized_field('visible'): True})
 
