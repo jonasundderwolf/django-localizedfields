@@ -87,6 +87,8 @@ class LanguageAwareUploadToDirectory(object):
                 slug += slugify(truncatechars(name, 130))
             else:
                 slug += slugify(basename)
+        else:
+            slug += slugify(basename)
 
         return '{0}{1}'.format(slug, extension)
 
