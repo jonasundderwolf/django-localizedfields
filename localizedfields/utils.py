@@ -1,6 +1,7 @@
+from contextlib import contextmanager
 from django.conf import settings
 from django.utils.deconstruct import deconstructible
-from django.utils.translation import get_language as django_get_language
+from django.utils.translation import get_language as django_get_language, activate
 
 
 LANGUAGES = [lang for lang, name in settings.LANGUAGES]
@@ -29,6 +30,14 @@ def first_value(instance, field):
         val = instance.get_localized(lang, field)
         if val:
             return val
+
+
+@contextmanager
+def switch_language(language):
+    previous = django_get_language()
+    activate(language)
+    yield
+    activate(previous)
 
 
 import os
