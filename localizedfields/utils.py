@@ -75,7 +75,7 @@ class LanguageAwareUploadToDirectory(object):
         basename, extension = os.path.splitext(filename)
         extension = extension.lower()
 
-        slug = slugify(basename)
+        slug = ''
         if self.options.get('prefix'):
             slug = slugify(self.options.get('prefix')) + '_'
 
