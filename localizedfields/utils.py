@@ -40,6 +40,14 @@ def switch_language(language):
     activate(previous)
 
 
+def for_all_languages(func, *args, **kwargs):
+    results = {}
+    for language, __ in settings.LANGUAGES:
+        with switch_language(language):
+            results[language] = func(*args, **kwargs)
+    return results
+
+
 import os
 import datetime
 from django.template.defaultfilters import slugify, truncatechars
