@@ -1,7 +1,6 @@
-from contextlib import contextmanager
 from django.conf import settings
 from django.utils.deconstruct import deconstructible
-from django.utils.translation import get_language as django_get_language, activate
+from django.utils.translation import get_language as django_get_language, override
 
 
 LANGUAGES = [lang for lang, name in settings.LANGUAGES]
@@ -32,18 +31,10 @@ def first_value(instance, field):
             return val
 
 
-@contextmanager
-def switch_language(language):
-    previous = django_get_language()
-    activate(language)
-    yield
-    activate(previous)
-
-
 def for_all_languages(func, *args, **kwargs):
     results = {}
     for language, __ in settings.LANGUAGES:
-        with switch_language(language):
+        with override(language):
             results[language] = func(*args, **kwargs)
     return results
 
