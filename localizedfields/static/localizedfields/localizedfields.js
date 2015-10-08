@@ -3,12 +3,12 @@
     // Shortcut, if there isn't any change form
     if (!$('body').hasClass('change-form')) {return;}
 
-    var fallback_toggle_label_color = $('fieldset.language h2').css('color');
-    var translation_field = $('div.field-translated_languages').hide().find('input');
-    var show_translations = Cookies.get('admin_translations') || LANGUAGE_CODE;
+    var fallback_toggle_label_color = $('fieldset.language h2').css('color'),
+        translation_field = $('div.field-translated_languages').hide().find('input'),
+        show_translations = Cookies.get('admin_translations') || localized_fields.default_language;
 
     if (window.location.search.match(/lang=(\w{2})/)) {
-      show_translations = LANGUAGE_CODE + ',' + RegExp.$1;
+      show_translations = localized_fields.default_language + ',' + RegExp.$1;
     }
 
     // add button to make all language versions visible
@@ -37,13 +37,13 @@
 
     // add checkboxes to turn display of individual languages on and off
     var lang_selectors = '<div id="language-selector" class="inline-group">' +
-                         '<div class="form-row">Show translation tab for: ';
+                         '<div class="form-row">' + localized_fields.translation_label + ': ',
     var translations = translation_field.val();
-    $.each(LANGUAGES, function() {
+    $.each(localized_fields.languages, function() {
       var lang = this[0],
           name = this[1];
       // primary language can't be toggled
-      if (lang == LANGUAGE_CODE) {return;}
+      if (lang == localized_fields.default_language) {return;}
       var translated = '',
           show_fields_for_language = false;
           fallback_active = true;
@@ -56,8 +56,8 @@
         show_fields_for_language = true;
       }
 
-      var fallback_toggle_id = 'language-toggle-' + lang;
-      var fallback_title = 'Fallback to ' + LANGUAGES[0][1];
+      var fallback_toggle_id = 'language-toggle-' + lang,
+          fallback_title = localized_fields.fallback_label + ' ' + localized_fields.languages[0][1];
       var $fallback_toggle = $(
         '<div class="language-toggle">' +
         '<input type="checkbox" id=' + fallback_toggle_id + ' name="activate_language" ' + 
@@ -68,7 +68,7 @@
 
       $('fieldset.language.' + lang + ' h2').append($fallback_toggle);
 
-      lang_selectors += '<input id="id_show_' + lang + '" type="checkbox"  name="show_language" value="' + 
+      lang_selectors += '<input id="id_show_' + lang + '" type="checkbox"  name="show_language" value="' +
         lang + '" ' + (show_fields_for_language ? 'checked="checked"' : '') + ' /> ' + '<label for="id_show_' + lang + '" ' +
         (fallback_active ? 'class="translated"' : '') + '>' + name + ' (' + lang +
         ')</label>&nbsp;&nbsp;';
@@ -78,12 +78,12 @@
     $('.breadcrumbs').append(lang_selectors);
 
     // move default language to first position
-    $('fieldset.language.' + LANGUAGE_CODE).prependTo($('#all_languages'));
+    $('fieldset.language.' + localized_fields.default_language).prependTo($('#all_languages'));
 
     show_hide_elements(show_translations, translation_field.val());
 
     $('#language-selector input').click(function(e) {
-      var show_translations = LANGUAGE_CODE;
+      var show_translations = localized_fields.default_language;
       $('#language-selector input:checked').each(function() {
         show_translations += ',' + $(this).val();
       });
@@ -103,7 +103,7 @@
         translation_field.val(translation_field.val().replace(',' + lang, ''));
       }
 
-      show_hide_elements(Cookies.get('admin_translations') || LANGUAGE_CODE,
+      show_hide_elements(Cookies.get('admin_translations') || localized_fields.default_language,
         translation_field.val());
     });
 
@@ -111,12 +111,11 @@
     if (typeof(contentblock_init_handlers) != 'undefined') {
       contentblock_init_handlers.push(function() {
         show_hide_elements(
-          Cookies.get('admin_translations') || LANGUAGE_CODE,
+          Cookies.get('admin_translations') || localized_fields.default_language,
           translation_field.val()
-        );
 
         var def_lang_fields = $('#main > div fieldset.module:not(.lang-processed) > .form-row').filter(function () {
-          return $(this).attr('class').indexOf('_'+LANGUAGE_CODE) > 0;
+          return $(this).attr('class').indexOf('_'+localized_fields.default_language) > 0;
         })
         // languages should be next to each in feincms contents
         // clear the left float on the primary language
@@ -143,9 +142,9 @@
 
   function show_hide_elements(show_translations, translations) {
     // loop over fields and show/hide as appropriate
-    $.each(LANGUAGES, function() {
+    $.each(localized_fields.languages, function() {
       var lang = this[0], name = this[1];
-      if (lang == LANGUAGE_CODE) {return;}
+      if (lang == localized_fields.default_language) {return;}
       var elements = $('fieldset.language.' + lang);
       var feincms_elements = $('div.item-content div.form-row[class$=_' + lang + ']');
 

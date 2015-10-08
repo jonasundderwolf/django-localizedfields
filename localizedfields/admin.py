@@ -40,6 +40,7 @@ class TranslatableAdminMixin(object):
     sets them automatically correctly when necessary.
     '''
     list_display = ['__str__']
+    change_form_template = 'admin/localized_change_form.html'
 
     def __init__(self, *args, **kwargs):
         super(TranslatableAdminMixin, self).__init__(*args, **kwargs)
@@ -125,6 +126,13 @@ class TranslatableAdminMixin(object):
         return ' | '.join(s)
     linked_languages.allow_tags = True
     linked_languages.short_description = 'Languages'
+
+    def render_change_form(self, request, context, **kwargs):
+        context.update({
+            'DEFAULT_LANGUAGE': settings.LANGUAGE_CODE,
+        })
+        return super(TranslatableAdminMixin, self).render_change_form(
+            request, context, **kwargs)
 
     @property
     def media(self):
