@@ -97,7 +97,7 @@
       var lang = this[0], name = this[1],
           fallback_active = false;
           fallback_toggle_id = 'language-toggle-' + lang,
-          fallback_title = 'Fallback to ' + LOCALIZED_FIELDS.languages[0][1];
+          fallback_title = LOCALIZED_FIELDS.fallback_label.replace(/\{language\}/, LOCALIZED_FIELDS.languages[0][1]);
 
       if ($.inArray(lang, active_translations) == -1) {
         fallback_active = true;

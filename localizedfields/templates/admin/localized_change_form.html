@@ -8,7 +8,7 @@
       languages: [{% for lang, name in LANGUAGES %} ["{{ lang }}", "{{ name }}"] {% if not forloop.last %},{% endif %}{% endfor %}],
       default_language: "{{ DEFAULT_LANGUAGE }}",
       translation_label: "{% trans "Show translations for" %}",
-      fallback_label: "{% trans "Fallback to" %}"
+      fallback_label: "{% trans "Fallback to {language}" %}"
     };
   </script>
 {% endblock %}
