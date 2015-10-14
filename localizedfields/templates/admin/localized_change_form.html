@@ -4,10 +4,10 @@
 {% block extrahead %}
   {{ block.super }}
   <script type="text/javascript">
-    var localized_fields = {
+    var LOCALIZED_FIELDS = {
       languages: [{% for lang, name in LANGUAGES %} ["{{ lang }}", "{{ name }}"] {% if not forloop.last %},{% endif %}{% endfor %}],
       default_language: "{{ DEFAULT_LANGUAGE }}",
-      translation_label: "{% trans "Show translations for" %}"
+      translation_label: "{% trans "Show translations for" %}",
       fallback_label: "{% trans "Fallback to" %}"
     };
   </script>

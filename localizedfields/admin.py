@@ -34,23 +34,11 @@ class VisibilityFilter(SimpleListFilter):
         return queryset
 
 
-class TranslatableAdminMixin(object):
-    '''
-    Mixin class that allows LocalizedFields in admin fieldsets declaration and
-    sets them automatically correctly when necessary.
-    '''
-    list_display = ['__str__']
+class TranslatedFieldsMixin(object):
     change_form_template = 'admin/localized_change_form.html'
 
-    def __init__(self, *args, **kwargs):
-        super(TranslatableAdminMixin, self).__init__(*args, **kwargs)
-        self.list_filter = list(self.list_filter) + [TranslationFilter, VisibilityFilter]
-        if 'linked_languages' not in self.list_display:
-            self.list_display = list(self.list_display) + ['linked_languages']
-
     def get_fieldsets(self, request, obj=None):
-        fieldsets = super(TranslatableAdminMixin, self).get_fieldsets(request,
-                                                                      obj)
+        fieldsets = super(TranslatedFieldsMixin, self).get_fieldsets(request, obj)
 
         # group fieldsets by language
         localized_fieldsets = dict([
@@ -131,7 +119,7 @@ class TranslatableAdminMixin(object):
         context.update({
             'DEFAULT_LANGUAGE': settings.LANGUAGE_CODE,
         })
-        return super(TranslatableAdminMixin, self).render_change_form(
+        return super(TranslatedFieldsMixin, self).render_change_form(
             request, context, **kwargs)
 
     @property
@@ -142,4 +130,18 @@ class TranslatableAdminMixin(object):
             'localizedfields/localizedfields.js',
         )
 
-        return super(TranslatableAdminMixin, self).media + widgets.Media(css=css, js=js)
+        return super(TranslatedFieldsMixin, self).media + widgets.Media(css=css, js=js)
+
+
+class TranslatableAdminMixin(TranslatedFieldsMixin):
+    '''
+    Mixin class that allows LocalizedFields in admin fieldsets declaration and
+    sets them automatically correctly when necessary.
+    '''
+    list_display = ['__str__']
+
+    def __init__(self, *args, **kwargs):
+        super(TranslatableAdminMixin, self).__init__(*args, **kwargs)
+        self.list_filter = list(self.list_filter) + [TranslationFilter, VisibilityFilter]
+        if 'linked_languages' not in self.list_display:
+            self.list_display = list(self.list_display) + ['linked_languages']
