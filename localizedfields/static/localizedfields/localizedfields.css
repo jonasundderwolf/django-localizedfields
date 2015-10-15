@@ -38,12 +38,12 @@ div.item-content div.form-row {
 
 div.inline-group, #main_wrapper, .submit-row {clear:left;}
 
-.language-toggle {
+.fallback-toggle {
   float: right;
   display: inline-block;
 }
 
-.language-toggle label {
+.fallback-toggle label {
   color: #ffffff;
   font-weight: bold !important;
   padding: 0px !important;

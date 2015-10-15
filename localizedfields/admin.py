@@ -1,9 +1,14 @@
 import re
+import json
 
 from django.contrib.admin import SimpleListFilter
 from django.conf import settings
+from django.conf.urls import url
 from django.forms import widgets
+from django.http import HttpResponse
+from django.utils.encoding import force_text
 from django.utils.six import string_types
+from django.utils.translation import ugettext as _
 
 from .fields import LANGUAGES
 
@@ -35,8 +40,6 @@ class VisibilityFilter(SimpleListFilter):
 
 
 class TranslatedFieldsMixin(object):
-    change_form_template = 'admin/localized_change_form.html'
-
     def get_fieldsets(self, request, obj=None):
         fieldsets = super(TranslatedFieldsMixin, self).get_fieldsets(request, obj)
 
@@ -115,12 +118,20 @@ class TranslatedFieldsMixin(object):
     linked_languages.allow_tags = True
     linked_languages.short_description = 'Languages'
 
-    def render_change_form(self, request, context, **kwargs):
-        context.update({
-            'DEFAULT_LANGUAGE': settings.LANGUAGE_CODE,
-        })
-        return super(TranslatedFieldsMixin, self).render_change_form(
-            request, context, **kwargs)
+    def export_js_variables(self, request):
+        return HttpResponse(json.dumps({
+            "languages": [(k, force_text(v)) for k, v in settings.LANGUAGES],
+            "default_language": settings.LANGUAGE_CODE,
+            "translation_label": _("Show translations for"),
+            "fallback_label": _("Fallback to %(language)s") % {'language': dict(
+                settings.LANGUAGES)[settings.LANGUAGE_CODE]},
+        }), content_type='application/json')
+
+    def get_urls(self):
+        urls = super(TranslatedFieldsMixin, self).get_urls()
+        return [
+            url(r'^localizedfields/', self.export_js_variables),
+        ] + urls
 
     @property
     def media(self):

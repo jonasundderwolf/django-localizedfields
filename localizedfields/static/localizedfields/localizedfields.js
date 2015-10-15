@@ -1,7 +1,18 @@
 (function($) {
+  var LOCALIZED_FIELDS, $translation_field;
+
+  $.holdReady(true);
+  $.getJSON(window.location.pathname + '../localizedfields/', function(data) {
+      // get constants now already
+      LOCALIZED_FIELDS = data;
+      $.holdReady(false);
+  }, function() {$.hold_ready(false);});
+
   $(function() {
     // Shortcut, if there isn't any change form
-    if (!$('body').hasClass('change-form')) {return;}
+    if (!LOCALIZED_FIELDS || !$('body').hasClass('change-form')) {return;}
+
+    $translation_field = $('div.field-translated_languages input');
 
     if (window.location.search.match(/lang=(\w{2})/)) {
       visible_translations([LOCALIZED_FIELDS.default_language, RegExp.$1]);
@@ -30,15 +41,15 @@
       if (lang == LOCALIZED_FIELDS.default_language) {return;}
       var show_fields_for_language = $.inArray(lang, translations) > -1;
 
-      lang_selectors += '<input id="id_show_' + lang + '" type="checkbox"  name="show_language" value="' +
-        lang + '" ' + (show_fields_for_language ? 'checked="checked"' : '') + ' /> ' + '<label for="id_show_' + lang + '">' +
+      lang_selectors += '<input id="id_translation_show_' + lang + '" type="checkbox"  value="' + lang + '" ' +
+        (show_fields_for_language ? 'checked="checked"' : '') + ' /> ' + '<label for="id_translation_show_' + lang + '">' +
         name + ' (' + lang + ')</label>&nbsp;&nbsp;';
 
     });
     lang_selectors += '</div></div>'
     $('.breadcrumbs').append(lang_selectors);
 
-    $('#language-selector input').click(function(e) {
+    $('#language-selector').on('click', 'input', function() {
       if ($(this).is(':checked')) {
         visible_translations(this.value);
       } else {
@@ -85,46 +96,52 @@
       }
     }).change();
 
-    return $('div.field-translated_languages').hide().length > 0;
+    return $('div.field-translated_languages')/*.hide()*/.length > 0;
   }
 
   function prepare_fallback_checkbox() {
     var fallback_toggle_label_color = $('fieldset.language h2').css('color'),
-        translation_field = $('div.field-translated_languages').hide().find('input');
+        fallback_title = LOCALIZED_FIELDS.fallback_label.replace(/\{language\}/, LOCALIZED_FIELDS.languages[0][1]),
         active = active_translations();
 
     $.each(LOCALIZED_FIELDS.languages, function() {
       var lang = this[0], name = this[1],
           fallback_active = false;
-          fallback_toggle_id = 'language-toggle-' + lang,
-          fallback_title = LOCALIZED_FIELDS.fallback_label.replace(/\{language\}/, LOCALIZED_FIELDS.languages[0][1]);
+          fallback_toggle_id = 'fallback-toggle-' + lang;
 
-      if ($.inArray(lang, active_translations) == -1) {
+      if (lang == LOCALIZED_FIELDS.default_language) {return;}
+
+      if ($.inArray(lang, active) == -1) {
         fallback_active = true;
+      } else {
+        $('#language-selector label[for=id_translation_show_' + lang + ']').addClass('translated');
       }
 
       $fallback_toggle = $(
-        '<div class="language-toggle">' +
-        '<input type="checkbox" id=' + fallback_toggle_id + ' name="activate_language" ' +
-        (fallback_active ? 'checked="checked"' : '') + ' value="' + lang +
+        '<div class="fallback-toggle">' +
+        '<input type="checkbox" id="' + fallback_toggle_id + '" ' + (fallback_active ? 'checked="checked"' : '') + ' value="' + lang +
         '"/> <label style="color: ' + fallback_toggle_label_color + '" for=' + fallback_toggle_id + '>' + fallback_title + '</label>' +
         '</div>'
       );
+
 
       $('fieldset.language.' + lang + ' h2').append($fallback_toggle);
 
     });
 
-    $('input[name=activate_language]').click(function() {
+    $('#all_languages').on('click', '.fallback-toggle input', function() {
       var $this = $(this),
-          lang = $this.val();
-      $('#language-selector label[for=id_show_' + lang + ']').toggleClass('translated');
+          lang = $this.val(),
+          $lang_label = $('#language-selector label[for=id_translation_show_' + lang + ']');
+
       if ($this.is(':checked')) {
-        // activate language
-        active_translations(lang);
-      } else {
         // remove from existing translations
         active_translations(undefined, lang);
+        $lang_label.removeClass('translated');
+      } else {
+        // activate language
+        active_translations(lang);
+        $lang_label.addClass('translated');
       }
 
       show_hide_elements();
@@ -200,19 +217,19 @@
   }
 
   function active_translations(add, remove) {
-    $translation_field = $('div.field-translated_languages input').hide().find('input');
     if (!$translation_field.length) {
       return false;
     }
     var translations = $translation_field.val().replace(/,,/g, ',').replace(/^,/, '').replace(/,$/, '').split(/,/);
+
     if (add || remove) {
       if (add && ($.inArray(add, translations) == -1)) {
         translations.push(add);
-        $('#id_show_' + lang).addClass('translated');
+        $('#language-selector label[for=id_translation_show_' + add + ']').addClass('translated');
       }
       if (remove) {
         translations = $.grep(translations, function(v) {return v != remove});
-        $('#id_show_' + lang).removeClass('translated');
+        $('#language-selector label[for=id_translation_show_' + remove + ']').removeClass('translated');
       }
       $translation_field.val(translations.join(','));
     }
