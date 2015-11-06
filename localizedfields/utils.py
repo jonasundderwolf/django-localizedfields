@@ -1,6 +1,7 @@
 from django.conf import settings
-from django.utils.deconstruct import deconstructible
 from django.utils.translation import get_language as django_get_language, override
+
+from .compat import deconstructible
 
 
 LANGUAGES = [lang for lang, name in settings.LANGUAGES]
