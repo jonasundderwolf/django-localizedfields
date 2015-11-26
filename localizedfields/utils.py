@@ -14,8 +14,11 @@ def localized_field_names(field):
 def get_language():
     language = django_get_language()
     # no sublanguages
-    if language and '-' in language:
-        language = language.split('-')[0]
+    if language:
+        if '-' in language:
+            language = language.split('-')[0]
+    else:
+        language = settings.LANGUAGE_CODE
 
     # return str not unicode so we can use it in a kwargs dictionary
     return str(language)
