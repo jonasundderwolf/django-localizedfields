@@ -1,35 +1,37 @@
 from django.conf import settings
-from django.utils.translation import get_language as django_get_language, override
+from django.utils.translation import get_language, override
 
 from .compat import deconstructible
 
 
-LANGUAGES = [lang for lang, name in settings.LANGUAGES]
+def short_language(language=None):
+    if not language:
+        language = get_language()
 
-
-def localized_field_names(field):
-    return ['%s_%s' % (field, lang) for lang in LANGUAGES]
-
-
-def get_language():
-    language = django_get_language()
-    # no sublanguages
-    if language:
-        if '-' in language:
-            language = language.split('-')[0]
-    else:
+    if not language:
         language = settings.LANGUAGE_CODE
+
+    # no sublanguages
+    if '-' in language:
+        language = language.split('-')[0]
 
     # return str not unicode so we can use it in a kwargs dictionary
     return str(language)
 
 
+SHORT_LANGUAGES = list(set([short_language(lang) for lang, name in settings.LANGUAGES]))
+
+
+def localized_field_names(field):
+    return ['%s_%s' % (field, lang) for lang in SHORT_LANGUAGES]
+
+
 def localized_field(field):
-    return '%s_%s' % (field, get_language())
+    return '%s_%s' % (field, short_language())
 
 
 def first_value(instance, field):
-    for lang in LANGUAGES:
+    for lang in SHORT_LANGUAGES:
         val = instance.get_localized(lang, field)
         if val:
             return val
@@ -37,7 +39,7 @@ def first_value(instance, field):
 
 def for_all_languages(func, *args, **kwargs):
     results = {}
-    for language, __ in settings.LANGUAGES:
+    for language in SHORT_LANGUAGES:
         with override(language):
             results[language] = func(*args, **kwargs)
     return results
@@ -90,7 +92,7 @@ class LanguageAwareUploadToDirectory(object):
     def __call__(self, instance, filename):
         language = self.options.get('language')
         if language:
-            old_lang = get_language()
+            old_lang = short_language()
             translation.activate(language)
 
         filename = self._generate_filename(instance, filename, language)

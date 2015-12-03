@@ -3,7 +3,7 @@ from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
 
 from .fields import LocalizedBooleanField
-from .utils import LANGUAGES, get_language, localized_field
+from .utils import SHORT_LANGUAGES, short_language, localized_field
 
 
 class TranslatedManager(models.Manager):
@@ -16,7 +16,8 @@ class TranslatedManager(models.Manager):
 @python_2_unicode_compatible
 class TranslatableModel(models.Model):
     translated_languages = models.CharField(
-        'Languages', max_length=50, blank=True, default=settings.LANGUAGE_CODE)
+        'Languages', max_length=50, blank=True, default=short_language(
+            settings.LANGUAGE_CODE))
     visible = LocalizedBooleanField(verbose_name='Visible', default=False)
 
     objects = models.Manager()
@@ -33,8 +34,8 @@ class TranslatableModel(models.Model):
 
     def __str__(self, title_attr='title'):
         if hasattr(self, title_attr):
-            for lang in [get_language()] + LANGUAGES:
-                title = self.get_localized(lang, title_attr)
+            for lang in [short_language()] + SHORT_LANGUAGES:
+                title = self.get_localized(short_language(lang), title_attr)
                 if title:
                     return title
         return '<%s: %s>' % (self.__class__.__name__, self.id)

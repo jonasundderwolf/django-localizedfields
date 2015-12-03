@@ -2,7 +2,7 @@ import re
 import json
 
 from django.contrib.admin import SimpleListFilter
-from django.conf import settings
+from django.conf import global_settings, settings
 from django.conf.urls import url
 from django.forms import widgets
 from django.http import HttpResponse
@@ -10,7 +10,9 @@ from django.utils.encoding import force_text
 from django.utils.six import string_types
 from django.utils.translation import ugettext as _
 
-from .fields import LANGUAGES
+from .utils import SHORT_LANGUAGES, short_language
+
+LANGUAGE_NAMES = dict(global_settings.LANGUAGES)
 
 
 class TranslationFilter(SimpleListFilter):
@@ -18,7 +20,7 @@ class TranslationFilter(SimpleListFilter):
     parameter_name = 'translated'
 
     def lookups(self, request, model_admin):
-        return settings.LANGUAGES
+        return [(l, LANGUAGE_NAMES.get(l, l)) for l in SHORT_LANGUAGES]
 
     def queryset(self, request, queryset):
         if self.value():
@@ -31,7 +33,7 @@ class VisibilityFilter(SimpleListFilter):
     parameter_name = 'visibility'
 
     def lookups(self, request, model_admin):
-        return settings.LANGUAGES
+        return [(l, LANGUAGE_NAMES.get(l, l)) for l in SHORT_LANGUAGES]
 
     def queryset(self, request, queryset):
         if self.value():
@@ -46,17 +48,17 @@ class TranslatedFieldsMixin(object):
         # group fieldsets by language
         localized_fieldsets = dict([
             (lang, (
-                name,
+                _(LANGUAGE_NAMES.get(lang, lang)),
                 {
                     'fields': [],
                     'classes': ['language', lang],
                 }
-            )) for lang, name in settings.LANGUAGES
+            )) for lang in SHORT_LANGUAGES
         ])
         remove_fieldsets = []
 
         for o, (name, attrs) in enumerate(fieldsets):
-            if name == dict(settings.LANGUAGES)[settings.LANGUAGE_CODE]:
+            if name == _(LANGUAGE_NAMES.get(lang, lang)):
                 # language fieldsets exist already, skip - we already reworked this form
                 return fieldsets
             to_remove = []
@@ -66,17 +68,17 @@ class TranslatedFieldsMixin(object):
                     match = re.match(r'^(.*)_([a-z]{2})$', field)
                     if match:
                         if match.group(1) == 'visible':
-                            if match.group(2) == settings.LANGUAGE_CODE:
+                            if match.group(2) == short_language(settings.LANGUAGE_CODE):
                                 attrs['fields'][i] = tuple(
-                                    ['visible_%s' % lang for lang in LANGUAGES])
+                                    ['visible_%s' % lang for lang in SHORT_LANGUAGES])
                             else:
                                 to_remove.append(i)
-                        elif match.group(2) == settings.LANGUAGE_CODE:
-                            for lang in LANGUAGES:
+                        elif match.group(2) == short_language(settings.LANGUAGE_CODE):
+                            for lang in SHORT_LANGUAGES:
                                 localized_fieldsets[lang][1]['fields'].append(
                                     '%s_%s' % (match.group(1), lang))
                             to_remove.append(i)
-                        elif match.group(2) in LANGUAGES:
+                        elif match.group(2) in SHORT_LANGUAGES:
                             to_remove.append(i)
 
             for i in reversed(to_remove):
@@ -93,7 +95,7 @@ class TranslatedFieldsMixin(object):
             if name == 'FEINCMS_CONTENT':
                 break
 
-        for lang, name in settings.LANGUAGES:
+        for lang in SHORT_LANGUAGES:
             # insert new language fieldsets _before_ feincms content
             if insert_here:
                 fieldsets.insert(insert_here, localized_fieldsets[lang])
@@ -105,7 +107,7 @@ class TranslatedFieldsMixin(object):
 
     def linked_languages(self, obj):
         s = []
-        for lang in LANGUAGES:
+        for lang in SHORT_LANGUAGES:
             visible = obj.get_localized(lang, 'visible')
             translated = lang in obj.translated_languages
             if visible:
@@ -120,8 +122,8 @@ class TranslatedFieldsMixin(object):
 
     def export_js_variables(self, request):
         return HttpResponse(json.dumps({
-            "languages": [(k, force_text(v)) for k, v in settings.LANGUAGES],
-            "default_language": settings.LANGUAGE_CODE,
+            "languages": [(k, force_text()) for k, v in settings.LANGUAGES],
+            "default_language": short_language(settings.LANGUAGE_CODE),
             "translation_label": _("Show translations for"),
             "fallback_label": _("Fallback to %(language)s") % {'language': dict(
                 settings.LANGUAGES)[settings.LANGUAGE_CODE]},

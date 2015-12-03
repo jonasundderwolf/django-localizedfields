@@ -3,7 +3,7 @@ from django.conf import settings
 from django.db import models
 
 from composite_field.base import CompositeField
-from .utils import LANGUAGES, get_language, LanguageAwareUploadToDirectory
+from .utils import SHORT_LANGUAGES, short_language, LanguageAwareUploadToDirectory
 
 
 def get_localized(self, lang, name):
@@ -46,7 +46,7 @@ class LocalizedField(CompositeField):
         # we can't check for blanks, one language might always be blank
         kwargs.pop('blank', False)
 
-        for language in LANGUAGES:
+        for language in SHORT_LANGUAGES:
             self[language] = field_class(blank=True, *args, **kwargs)
 
     def contribute_to_class(self, cls, field_name):
@@ -66,7 +66,7 @@ class LocalizedField(CompositeField):
 
     def get(self, model):
         # get current value
-        translation = getattr(model, self.prefix + get_language())
+        translation = getattr(model, self.prefix + short_language())
 
         if self.fallback is False:
             # we don't fallback, return the value
@@ -77,10 +77,10 @@ class LocalizedField(CompositeField):
             return translation
 
         # fallback to default language
-        return getattr(model, self.prefix + settings.LANGUAGE_CODE)
+        return getattr(model, self.prefix + short_language(settings.LANGUAGE_CODE))
 
     def set(self, model, value):
-        setattr(model, self.prefix + get_language(), value)
+        setattr(model, self.prefix + short_language(), value)
 
 
 class LocalizedCharField(LocalizedField):
@@ -113,7 +113,7 @@ class LocalizedFileField(LocalizedField):
         # set a higher max length for filenames
         kwargs['max_length'] = 255
 
-        for language in LANGUAGES:
+        for language in SHORT_LANGUAGES:
             if not upload_to_params:
                 upload_to_params = {}
             upload_to_params.update({'language': language})
