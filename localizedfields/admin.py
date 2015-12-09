@@ -63,9 +63,10 @@ class TranslatedFieldsMixin(object):
                 return fieldsets
             to_remove = []
             attrs['fields'] = list(attrs['fields'])
+            rex = re.compile(r'(.*)_(%s)$' % '|'.join(SHORT_LANGUAGES))
             for i, field in enumerate(attrs['fields']):
                 if isinstance(field, string_types):
-                    match = re.match(r'^(.*)_([a-z]{2})$', field)
+                    match = rex.match(field)
                     if match:
                         if match.group(1) == 'visible':
                             if match.group(2) == short_language(settings.LANGUAGE_CODE):
@@ -78,7 +79,7 @@ class TranslatedFieldsMixin(object):
                                 localized_fieldsets[lang][1]['fields'].append(
                                     '%s_%s' % (match.group(1), lang))
                             to_remove.append(i)
-                        elif match.group(2) in SHORT_LANGUAGES:
+                        else:
                             to_remove.append(i)
 
             for i in reversed(to_remove):
