@@ -3,7 +3,8 @@ from django.conf import settings
 from django.db import models
 
 from composite_field.base import CompositeField
-from .utils import SHORT_LANGUAGES, short_language, LanguageAwareUploadToDirectory
+from .utils import (SHORT_LANGUAGES, short_language, LanguageAwareUploadToDirectory,
+                    for_all_languages)
 
 
 def get_localized(self, lang, name):
@@ -26,6 +27,11 @@ def set_localized(self, lang, name, value):
             'for this model. (%s)' % (name, lang, e)
         )
     return attr
+
+
+def set_all_localized(self, name, func, *args, **kwargs):
+    for k, v in for_all_languages(func, *args, **kwargs).items():
+        self.set_localized(k, name, v)
 
 
 class LocalizedField(CompositeField):
@@ -63,6 +69,7 @@ class LocalizedField(CompositeField):
         # monkeypatch some helper functions to the class
         cls.get_localized = get_localized
         cls.set_localized = set_localized
+        cls.set_all_localized = set_all_localized
 
     def get(self, model):
         # get current value
