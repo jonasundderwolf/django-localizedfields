@@ -10,7 +10,7 @@ from django.utils.encoding import force_text
 from django.utils.six import string_types
 from django.utils.translation import ugettext as _
 
-from .utils import SHORT_LANGUAGES, short_language
+from .utils import SHORT_LANGUAGES, short_language, localized_field
 
 LANGUAGE_NAMES = dict(global_settings.LANGUAGES)
 
@@ -77,7 +77,7 @@ class TranslatedFieldsMixin(object):
                         elif match.group(2) == short_language(settings.LANGUAGE_CODE):
                             for lang in SHORT_LANGUAGES:
                                 localized_fieldsets[lang][1]['fields'].append(
-                                    '%s_%s' % (match.group(1), lang))
+                                    localized_field(match.group(1), lang))
                             to_remove.append(i)
                         else:
                             to_remove.append(i)

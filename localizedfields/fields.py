@@ -4,12 +4,12 @@ from django.db import models
 
 from composite_field.base import CompositeField
 from .utils import (SHORT_LANGUAGES, short_language, LanguageAwareUploadToDirectory,
-                    for_all_languages)
+                    for_all_languages, localized_field)
 
 
 def get_localized(self, lang, name):
     try:
-        attr = getattr(self, '%s_%s' % (name, lang))
+        attr = getattr(self, localized_field(name, lang))
     except AttributeError as e:
         raise AttributeError(
             'Either field "%s" does not exist, or language "%s" is not defined '
@@ -20,7 +20,7 @@ def get_localized(self, lang, name):
 
 def set_localized(self, lang, name, value):
     try:
-        attr = setattr(self, '%s_%s' % (name, lang), value)
+        attr = setattr(self, localized_field(name, lang), value)
     except AttributeError as e:
         raise AttributeError(
             'Either field "%s" does not exist, or language "%s" is not defined '

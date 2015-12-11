@@ -23,7 +23,7 @@ SHORT_LANGUAGES = list(set([short_language(lang) for lang, name in settings.LANG
 
 
 def localized_field_names(field):
-    return ['%s_%s' % (field, lang) for lang in SHORT_LANGUAGES]
+    return [localized_field(field, lang) for lang in SHORT_LANGUAGES]
 
 
 def localized_field(field, lang=None):
