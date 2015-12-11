@@ -26,8 +26,8 @@ def localized_field_names(field):
     return ['%s_%s' % (field, lang) for lang in SHORT_LANGUAGES]
 
 
-def localized_field(field):
-    return '%s_%s' % (field, short_language())
+def localized_field(field, lang=None):
+    return '%s_%s' % (field, lang or short_language())
 
 
 def first_value(instance, field):
