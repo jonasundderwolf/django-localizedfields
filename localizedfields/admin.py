@@ -123,7 +123,7 @@ class TranslatedFieldsMixin(object):
 
     def export_js_variables(self, request):
         return HttpResponse(json.dumps({
-            "languages": [(k, force_text()) for k, v in settings.LANGUAGES],
+            "languages": [(k, force_text(v)) for k, v in settings.LANGUAGES],
             "default_language": short_language(settings.LANGUAGE_CODE),
             "translation_label": _("Show translations for"),
             "fallback_label": _("Fallback to %(language)s") % {'language': dict(
