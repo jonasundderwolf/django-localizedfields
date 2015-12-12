@@ -1,2 +1,3 @@
 from .fields import *
-from .admin import *
+from .utils import localized_field
+from .admin import TranslatedFieldsMixin
