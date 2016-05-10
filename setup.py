@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name="django-localizedfields",
     author="Jonas und der Wolf GmbH",
-    author_email="jvp@jonasundderwolf.de",
+    author_email="info@jonasundderwolf.de",
     version='0.4',
     packages=find_packages(),
     install_requires=('django-composite-field==0.3'),
