@@ -58,7 +58,7 @@ class TranslatedFieldsMixin(object):
         remove_fieldsets = []
 
         for o, (name, attrs) in enumerate(fieldsets):
-            if name == _(LANGUAGE_NAMES.get(lang, lang)):
+            if name == _(LANGUAGE_NAMES.get(settings.LANGUAGE_CODE)):
                 # language fieldsets exist already, skip - we already reworked this form
                 return fieldsets
             to_remove = []
