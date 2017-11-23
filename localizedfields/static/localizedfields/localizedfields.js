@@ -2,7 +2,7 @@
   var LOCALIZED_FIELDS, $translation_field;
 
   $.holdReady(true);
-  $.getJSON(window.location.pathname + '../localizedfields/', function(data) {
+  $.getJSON(window.location.pathname + '../../localizedfields/', function(data) {
       // get constants now already
       LOCALIZED_FIELDS = data;
       $.holdReady(false);
