@@ -6,7 +6,10 @@
       // get constants now already
       LOCALIZED_FIELDS = data;
       $.holdReady(false);
-  }, function() {$.hold_ready(false);});
+  }, function() {$.hold_ready(false);}).fail(function () {
+    console.error('api endpoint admin/localizedfields not found')
+    $.holdReady(false);
+  });
 
   $(function() {
     // Shortcut, if there isn't any change form
