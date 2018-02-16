@@ -19,7 +19,11 @@ def short_language(language=None):
     return str(language)
 
 
-SHORT_LANGUAGES = list(set([short_language(lang) for lang, name in settings.LANGUAGES]))
+sorted_set = set()  # If we just cast the normal list to a set the order of entries will be randomised.
+SHORT_LANGUAGES = [
+    short_language(lang) for lang, name in settings.LANGUAGES
+    if not (lang in sorted_set or sorted_set.add(lang))
+]
 
 
 def localized_field_names(field):
