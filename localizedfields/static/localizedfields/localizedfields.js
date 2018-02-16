@@ -7,7 +7,7 @@
       LOCALIZED_FIELDS = data;
       $.holdReady(false);
   }, function() {$.hold_ready(false);}).fail(function () {
-    console.error('api endpoint admin/localizedfields not found')
+    console.error('api endpoint admin/localizedfields not found');
     $.holdReady(false);
   });
 
@@ -20,7 +20,7 @@
     if (window.location.search.match(/lang=(\w{2})/)) {
       visible_translations([LOCALIZED_FIELDS.default_language, RegExp.$1]);
     }
-    $('fieldset.language').wrapAll('<div id="all_languages"/>')
+    $('fieldset.language').wrapAll('<div id="all_languages"/>');
 
     // move default language to first position
     $('fieldset.language.' + LOCALIZED_FIELDS.default_language).prependTo($('#all_languages'));
@@ -49,7 +49,7 @@
         name + ' (' + lang + ')</label>&nbsp;&nbsp;';
 
     });
-    lang_selectors += '</div></div>'
+    lang_selectors += '</div></div>';
     $('.breadcrumbs').append(lang_selectors);
 
     $('#language-selector').on('click', 'input', function() {
@@ -59,17 +59,6 @@
         visible_translations(undefined, this.value);
       }
       show_hide_elements()
-    });
-
-    // trim language suffixes from labels
-    $("label").each(function(index){
-      var label = $(this),
-        oldText = label.text(),
-        newText = oldText.replace(/\s+\(.+?\)/g, ''),
-        newHTML = label.html().replace(oldText, newText);
-      if (oldText.substring(0, 7) !== 'Visible'){
-        label.html(newHTML);
-      }
     });
 
     show_hide_elements()
@@ -99,7 +88,7 @@
       }
     }).change();
 
-    return $('div.field-translated_languages')/*.hide()*/.length > 0;
+    return $('div.field-translated_languages').hide().length > 0;
   }
 
   function prepare_fallback_checkbox() {
@@ -132,6 +121,35 @@
 
     });
 
+    function align_objects(){
+      var field_types = [
+          'link',
+          'key_fact',
+          'document',
+          'title',
+          'tile',
+          'text',
+          'name',
+          'button',
+          'image',
+          'cropping',
+          'headline',
+          'teaser',
+          'black_overlay_text'
+      ];
+
+      for(i=0; i<field_types.length; i++) {
+        $('div[class*=' + field_types[i] + ']').addClass('field-' + field_types[i]);
+      }
+
+      $.each($('fieldset'), function () {
+         for(i=0; i<field_types.length; i++) {
+           $(this).find($('.field-' + field_types[i])).wrapAll("<div class='" + field_types[i] + "-wrapper' />");
+          }
+      });
+    }
+    align_objects();
+
     $('#all_languages').on('click', '.fallback-toggle input', function() {
       var $this = $(this),
           lang = $this.val(),
@@ -157,7 +175,7 @@
 
         var def_lang_fields = $('#main > div fieldset.module:not(.lang-processed) > .form-row').filter(function () {
           return $(this).attr('class').indexOf('_'+LOCALIZED_FIELDS.default_language) > 0;
-        })
+        });
         // languages should be next to each in feincms contents
         // clear the left float on the primary language
         def_lang_fields.css('clear', 'left');
@@ -181,8 +199,9 @@
       var lang = this[0], name = this[1];
       if (lang == LOCALIZED_FIELDS.default_language) {return;}
 
+     // hide elements where class name contains "_lang" (e.g. "_de")
       var $elements = $('fieldset.language.' + lang),
-          $feincms_elements = $('div.item-content div.form-row[class$=_' + lang + ']');
+          $feincms_elements = $('div.item-content div.form-row[class*=_' + lang + ']');
 
       if ($.inArray(lang, visible) > -1) {
         // show this language's fieldset
