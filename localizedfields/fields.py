@@ -3,11 +3,12 @@ from django.conf import settings
 from django.db import models
 
 from composite_field.base import CompositeField
-from .utils import (SHORT_LANGUAGES, short_language, LanguageAwareUploadToDirectory,
+from .utils import (SHORT_LANGUAGES, get_language, short_language, LanguageAwareUploadToDirectory,
                     for_all_languages, localized_field)
 
 
 def get_localized(self, lang, name):
+    lang = lang or get_language() or settings.LANGUAGE_CODE
     try:
         attr = getattr(self, localized_field(name, lang))
     except AttributeError as e:
@@ -19,6 +20,7 @@ def get_localized(self, lang, name):
 
 
 def set_localized(self, lang, name, value):
+    lang = lang or get_language() or settings.LANGUAGE_CODE
     try:
         attr = setattr(self, localized_field(name, lang), value)
     except AttributeError as e:
@@ -42,7 +44,10 @@ class LocalizedField(CompositeField):
         Fallback can have one if these values:
            None (default): an empty field value in an object that's marked as
                            "translated" for that language, will return the empty value.
-           True: always fallback to the default language in case the field is empty
+           True: fallback to the default language in case the field is empty
+                 or the fallback is checked in admin (saved in
+                 model.translated_languages)
+
            False: never fallback, even when the object is not translated
         '''
         super(LocalizedField, self).__init__()
@@ -78,6 +83,17 @@ class LocalizedField(CompositeField):
         if self.fallback is False:
             # we don't fallback, return the value
             return translation
+
+        translated_languages = getattr(model, 'translated_languages', '')
+
+        # only applies to models with translated_languages
+        if translated_languages:
+            # fallback to default if language not translated
+            if get_language() not in translated_languages:
+                return getattr(model, self.prefix + short_language(settings.LANGUAGE_CODE))
+        else:
+            if get_language() not in getattr(model.parent, 'translated_languages', ''):
+                return getattr(model, self.prefix + short_language(settings.LANGUAGE_CODE))
 
         if translation or not self.fallback:
             # show translation only if it exists or we have disabled fallback

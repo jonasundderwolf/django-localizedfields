@@ -1,15 +1,25 @@
 (function($) {
-  var LOCALIZED_FIELDS, $translation_field;
+  var LOCALIZED_FIELDS, ADMIN_URL, $translation_field;
 
   $.holdReady(true);
-  $.getJSON(window.location.pathname + '../../localizedfields/', function(data) {
-      // get constants now already
-      LOCALIZED_FIELDS = data;
-      $.holdReady(false);
-  }, function() {$.hold_ready(false);}).fail(function () {
-    console.error('api endpoint admin/localizedfields not found');
-    $.holdReady(false);
-  });
+
+  if (window.location.pathname.substr(-7)==='change/') {
+    // When inside Django /change/ url, step back two path increments
+    ADMIN_URL = window.location.pathname + '../../localizedfields/';
+  } else {
+    // When inside Django /add/ url (or others without a pk), step back one path increment
+    ADMIN_URL = window.location.pathname + '../localizedfields/';
+  }
+
+  $.getJSON(ADMIN_URL, function (data) {})
+      .done(function (data) {
+          LOCALIZED_FIELDS = data;
+          $.holdReady(false);
+      })
+      .fail(function () {
+          $.holdReady(false);
+          console.error('API endpoint admin/localizedfields not found.');
+      });
 
   $(function() {
     // Shortcut, if there isn't any change form
@@ -50,7 +60,7 @@
 
     });
     lang_selectors += '</div></div>';
-    $('.breadcrumbs').append(lang_selectors);
+    $('.breadcrumbs').after(lang_selectors);
 
     $('#language-selector').on('click', 'input', function() {
       if ($(this).is(':checked')) {

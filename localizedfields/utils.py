@@ -51,8 +51,13 @@ def for_all_languages(func, *args, **kwargs):
 
 import os
 import datetime
-from django.template.defaultfilters import slugify, truncatechars
+from django.template.defaultfilters import truncatechars
 from django.utils import translation
+
+try:
+    from slugify import slugify
+except ImportError:
+    from django.utils.text import slugify
 
 
 @deconstructible
