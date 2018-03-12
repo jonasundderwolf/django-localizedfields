@@ -133,7 +133,7 @@
                 '</div>'
             );
 
-            $('fieldset.language.' + lang + ' h2').append($fallback_toggle);
+            $('fieldset.language.' + lang + ' h2').text(name).append($fallback_toggle);
 
         });
 
