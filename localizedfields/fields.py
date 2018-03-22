@@ -85,14 +85,17 @@ class LocalizedField(CompositeField):
             return translation
 
         translated_languages = getattr(model, 'translated_languages', '')
-
         # only applies to models with translated_languages
+        if get_language() is None:
+            language = ''
+        else:
+            language = get_language()
         if translated_languages:
             # fallback to default if language not translated
-            if get_language() not in translated_languages:
+            if language not in translated_languages:
                 return getattr(model, self.prefix + short_language(settings.LANGUAGE_CODE))
         else:
-            if get_language() not in getattr(model.parent, 'translated_languages', ''):
+            if language not in getattr(model.parent, 'translated_languages', ''):
                 return getattr(model, self.prefix + short_language(settings.LANGUAGE_CODE))
 
         if translation or not self.fallback:
