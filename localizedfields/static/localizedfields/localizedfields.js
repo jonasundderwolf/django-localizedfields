@@ -220,7 +220,8 @@
 
             // hide elements where class name contains "_lang" (e.g. "_de")
             var $elements = $('fieldset.language.' + lang),
-                $feincms_elements = $('div.item-content div.form-row[class*=_' + lang + ']');
+                $feincms_elements = $('div.item-content div.form-row')
+                    .filter('[class*="_' + lang + ' "], [class$="_' + lang + '"]');
 
             if ($.inArray(lang, visible) > -1) {
                 // show this language's fieldset
