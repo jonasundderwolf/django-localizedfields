@@ -4,7 +4,7 @@ setup(
     name="django-localizedfields",
     author="Jonas und der Wolf GmbH",
     author_email="info@jonasundderwolf.de",
-    version='0.11',
+    version='0.12',
     packages=find_packages(),
     install_requires=('django-composite-field==0.3'),
     include_package_data=True,
