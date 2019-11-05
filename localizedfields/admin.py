@@ -6,6 +6,7 @@ from django.conf import global_settings, settings
 from django.conf.urls import url
 from django.forms import widgets
 from django.http import HttpResponse
+from django.utils.html import format_html
 from django.utils.encoding import force_text
 from django.utils.six import string_types
 from django.utils.translation import ugettext as _
@@ -117,7 +118,7 @@ class TranslatedFieldsMixin(object):
                 else:
                     s.append('<span>%s</span>' % lang.upper())
 
-        return ' | '.join(s)
+        return format_html(' | '.join(s))
     linked_languages.allow_tags = True
     linked_languages.short_description = 'Languages'
 
