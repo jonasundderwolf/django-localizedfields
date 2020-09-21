@@ -1,6 +1,5 @@
 from django.db import models
 from django.conf import settings
-from django.utils.encoding import python_2_unicode_compatible
 
 from .fields import LocalizedBooleanField
 from .utils import SHORT_LANGUAGES, short_language, localized_field
@@ -13,7 +12,6 @@ class TranslatedManager(models.Manager):
             **{localized_field('visible'): True})
 
 
-@python_2_unicode_compatible
 class TranslatableModel(models.Model):
     translated_languages = models.CharField(
         'Languages', max_length=50, blank=True, default=short_language(

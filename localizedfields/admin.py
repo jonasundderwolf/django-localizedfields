@@ -8,7 +8,6 @@ from django.forms import widgets
 from django.http import HttpResponse
 from django.utils.html import format_html
 from django.utils.encoding import force_text
-from django.utils.six import string_types
 from django.utils.translation import ugettext as _
 
 from .utils import SHORT_LANGUAGES, short_language, localized_field
@@ -66,7 +65,7 @@ class TranslatedFieldsMixin(object):
             attrs['fields'] = list(attrs['fields'])
             rex = re.compile(r'(.*)_(%s)$' % '|'.join(SHORT_LANGUAGES))
             for i, field in enumerate(attrs['fields']):
-                if isinstance(field, string_types):
+                if isinstance(field, str):
                     match = rex.match(field)
                     if match:
                         if match.group(1) == 'visible':

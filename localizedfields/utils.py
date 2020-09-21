@@ -1,7 +1,6 @@
 from django.conf import settings
+from django.utils.deconstruct import deconstructible
 from django.utils.translation import get_language, override
-
-from .compat import deconstructible
 
 
 def short_language(language=None):
@@ -53,11 +52,7 @@ import os
 import datetime
 from django.template.defaultfilters import truncatechars
 from django.utils import translation
-
-try:
-    from slugify import slugify
-except ImportError:
-    from django.utils.text import slugify
+from django.utils.text import slugify
 
 
 @deconstructible

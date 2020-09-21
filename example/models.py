@@ -1,10 +1,9 @@
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
+
 from localizedfields import fields
 from localizedfields.models import TranslatableModel
 
 
-@python_2_unicode_compatible
 class Document(TranslatableModel):
     untranslated_charfield = models.CharField(max_length=50, blank=True)
     charfield = fields.LocalizedCharField(max_length=50)
@@ -14,7 +13,7 @@ class Document(TranslatableModel):
     # booleanfield = fields.LocalizedBooleanField()
     datefield = fields.LocalizedDateField(blank=True, null=True)
     fkfield = fields.LocalizedForeignKey('self', null=True, blank=True,
-                                         related_name='+')
+                                         related_name='+', on_delete=models.CASCADE)
     urlfied = fields.LocalizedURLField(null=True, blank=True)
     decimalfield = fields.LocalizedDecimalField(max_digits=4, decimal_places=2, null=True,
                                                 blank=True)

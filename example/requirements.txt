@@ -1,6 +1,6 @@
 Pillow
-django==1.8.3
-django-composite-field==0.3
+django==2.2.16
+django-composite-field==1.0.0
 pytest
 pytest-django
 pytest-pep8

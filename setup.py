@@ -6,7 +6,7 @@ setup(
     author_email="info@jonasundderwolf.de",
     version='0.13',
     packages=find_packages(),
-    install_requires=('django-composite-field==0.3'),
+    install_requires=('django-composite-field==1.0.0'),
     include_package_data=True,
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -16,8 +16,9 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Topic :: Software Development :: Libraries :: Python Modules',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
     ],
 )

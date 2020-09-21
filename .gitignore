@@ -6,3 +6,4 @@
 *.sql
 *.tox/*
 example/media/*
+.idea

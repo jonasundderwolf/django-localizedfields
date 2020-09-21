@@ -1,8 +1,9 @@
-from __future__ import unicode_literals
 from django.conf import settings
 from django.db import models
 
 from composite_field.base import CompositeField
+from django.utils import translation
+
 from .utils import (SHORT_LANGUAGES, get_language, short_language, LanguageAwareUploadToDirectory,
                     for_all_languages, localized_field)
 
@@ -106,7 +107,15 @@ class LocalizedField(CompositeField):
         return getattr(model, self.prefix + short_language(settings.LANGUAGE_CODE))
 
     def set(self, model, value):
-        setattr(model, self.prefix + short_language(), value)
+        from django.utils.functional import Promise
+        # XXX is there a better way to detect ugettext_lazy objects?
+        if isinstance(value, Promise):
+            d = {}
+            for language in self:
+                with translation.override(language):
+                    d[language] = str(value)
+            value = d
+        return super(LocalizedField, self).set(model, value)
 
 
 class LocalizedCharField(LocalizedField):
