@@ -1,5 +1,7 @@
 from django.contrib import admin
+
 from localizedfields.admin import TranslatableAdminMixin
+
 from .models import Document
 
 

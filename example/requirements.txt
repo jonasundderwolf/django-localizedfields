@@ -3,5 +3,7 @@ django==2.2.16
 django-composite-field==1.1.0
 pytest
 pytest-django
-pytest-pep8
 pytest-factoryboy
+pytest-cov
+pytest-isort
+pytest-black

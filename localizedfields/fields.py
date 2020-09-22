@@ -1,11 +1,16 @@
+from composite_field.base import CompositeField
 from django.conf import settings
 from django.db import models
-
-from composite_field.base import CompositeField
 from django.utils import translation
 
-from .utils import (SHORT_LANGUAGES, get_language, short_language, LanguageAwareUploadToDirectory,
-                    for_all_languages, localized_field)
+from .utils import (
+    SHORT_LANGUAGES,
+    LanguageAwareUploadToDirectory,
+    for_all_languages,
+    get_language,
+    localized_field,
+    short_language,
+)
 
 
 def get_localized(self, lang, name):
@@ -15,7 +20,7 @@ def get_localized(self, lang, name):
     except AttributeError as e:
         raise AttributeError(
             'Either field "%s" does not exist, or language "%s" is not defined '
-            'for this model. (%s)' % (name, lang, e)
+            "for this model. (%s)" % (name, lang, e)
         )
     return attr
 
@@ -27,7 +32,7 @@ def set_localized(self, lang, name, value):
     except AttributeError as e:
         raise AttributeError(
             'Either field "%s" does not exist, or language "%s" is not defined '
-            'for this model. (%s)' % (name, lang, e)
+            "for this model. (%s)" % (name, lang, e)
         )
     return attr
 
@@ -38,9 +43,8 @@ def set_all_localized(self, name, func, *args, **kwargs):
 
 
 class LocalizedField(CompositeField):
-
     def __init__(self, field_class, *args, **kwargs):
-        '''
+        """
         Adds a model field of type "field_class" with translations for all languages.
         Fallback can have one if these values:
            None (default): an empty field value in an object that's marked as
@@ -50,23 +54,23 @@ class LocalizedField(CompositeField):
                  model.translated_languages)
 
            False: never fallback, even when the object is not translated
-        '''
+        """
         super(LocalizedField, self).__init__()
-        self.verbose_name = kwargs.pop('verbose_name', None)
-        self.fallback = kwargs.pop('fallback', None)
+        self.verbose_name = kwargs.pop("verbose_name", None)
+        self.fallback = kwargs.pop("fallback", None)
 
         # we can't check for blanks, one language might always be blank
-        kwargs.pop('blank', False)
+        kwargs.pop("blank", False)
 
         for language in SHORT_LANGUAGES:
             self[language] = field_class(blank=True, *args, **kwargs)
 
     def contribute_to_class(self, cls, field_name):
         if self.verbose_name is None:
-            self.verbose_name = field_name.replace('_', ' ').capitalize()
+            self.verbose_name = field_name.replace("_", " ").capitalize()
 
         for language in self:
-            self[language].verbose_name = '%s (%s)' % (self.verbose_name, language)
+            self[language].verbose_name = "%s (%s)" % (self.verbose_name, language)
             # Save a reference to the composite field for later use
             self[language].composite_field = self
 
@@ -85,19 +89,23 @@ class LocalizedField(CompositeField):
             # we don't fallback, return the value
             return translation
 
-        translated_languages = getattr(model, 'translated_languages', '')
+        translated_languages = getattr(model, "translated_languages", "")
         # only applies to models with translated_languages
         if get_language() is None:
-            language = ''
+            language = ""
         else:
             language = get_language()
         if translated_languages:
             # fallback to default if language not translated
             if language not in translated_languages:
-                return getattr(model, self.prefix + short_language(settings.LANGUAGE_CODE))
+                return getattr(
+                    model, self.prefix + short_language(settings.LANGUAGE_CODE)
+                )
         else:
-            if language not in getattr(model.parent, 'translated_languages', ''):
-                return getattr(model, self.prefix + short_language(settings.LANGUAGE_CODE))
+            if language not in getattr(model.parent, "translated_languages", ""):
+                return getattr(
+                    model, self.prefix + short_language(settings.LANGUAGE_CODE)
+                )
 
         if translation or not self.fallback:
             # show translation only if it exists or we have disabled fallback
@@ -108,6 +116,7 @@ class LocalizedField(CompositeField):
 
     def set(self, model, value):
         from django.utils.functional import Promise
+
         # XXX is there a better way to detect ugettext_lazy objects?
         if isinstance(value, Promise):
             d = {}
@@ -119,83 +128,79 @@ class LocalizedField(CompositeField):
 
 
 class LocalizedCharField(LocalizedField):
-
     def __init__(self, *args, **kwargs):
         super(LocalizedCharField, self).__init__(models.CharField, *args, **kwargs)
 
 
 class LocalizedTextField(LocalizedField):
-
     def __init__(self, *args, **kwargs):
         super(LocalizedTextField, self).__init__(models.TextField, *args, **kwargs)
 
 
 class LocalizedFileField(LocalizedField):
-
     def __init__(self, *args, **kwargs):
         # call the grandparent's init()
-        upload_to_params = kwargs.pop('upload_to_params', None)
+        upload_to_params = kwargs.pop("upload_to_params", None)
 
         super(LocalizedField, self).__init__()
-        field_class = kwargs.pop('field_class', models.FileField)
-        self.verbose_name = kwargs.pop('verbose_name', None)
+        field_class = kwargs.pop("field_class", models.FileField)
+        self.verbose_name = kwargs.pop("verbose_name", None)
         # fallback to english version by default
-        self.fallback = kwargs.pop('fallback', True)
+        self.fallback = kwargs.pop("fallback", True)
         # when we're localized, the field can always be empty in one language
-        if 'blank' in kwargs:
-            del kwargs['blank']
+        if "blank" in kwargs:
+            del kwargs["blank"]
 
         # set a higher max length for filenames
-        kwargs['max_length'] = 255
+        kwargs["max_length"] = 255
 
         for language in SHORT_LANGUAGES:
             if not upload_to_params:
                 upload_to_params = {}
-            upload_to_params.update({'language': language})
-            kwargs['upload_to'] = LanguageAwareUploadToDirectory(**upload_to_params)
+            upload_to_params.update({"language": language})
+            kwargs["upload_to"] = LanguageAwareUploadToDirectory(**upload_to_params)
 
             self[language] = field_class(blank=True, *args, **kwargs)
 
 
 class LocalizedImageField(LocalizedFileField):
-
     def __init__(self, *args, **kwargs):
-        kwargs['field_class'] = models.ImageField
+        kwargs["field_class"] = models.ImageField
         super(LocalizedImageField, self).__init__(models.ImageField, *args, **kwargs)
 
 
 class LocalizedBooleanField(LocalizedField):
-
     def __init__(self, *args, **kwargs):
-        super(LocalizedBooleanField, self).__init__(models.BooleanField, *args, **kwargs)
+        super(LocalizedBooleanField, self).__init__(
+            models.BooleanField, *args, **kwargs
+        )
 
 
 class LocalizedDateField(LocalizedField):
-
     def __init__(self, *args, **kwargs):
         super(LocalizedDateField, self).__init__(models.DateField, *args, **kwargs)
 
 
 class LocalizedForeignKey(LocalizedField):
-
     def __init__(self, *args, **kwargs):
         super(LocalizedForeignKey, self).__init__(models.ForeignKey, *args, **kwargs)
 
 
 class LocalizedURLField(LocalizedField):
-
     def __init__(self, *args, **kwargs):
-        kwargs['fallback'] = kwargs.get('fallback', True)
+        kwargs["fallback"] = kwargs.get("fallback", True)
         super(LocalizedURLField, self).__init__(models.URLField, *args, **kwargs)
 
 
 class LocalizedDecimalField(LocalizedField):
-
     def __init__(self, *args, **kwargs):
-        super(LocalizedDecimalField, self).__init__(models.DecimalField, *args, **kwargs)
+        super(LocalizedDecimalField, self).__init__(
+            models.DecimalField, *args, **kwargs
+        )
 
 
 class LocalizedIntegerField(LocalizedField):
-
     def __init__(self, *args, **kwargs):
-        super(LocalizedIntegerField, self).__init__(models.IntegerField, *args, **kwargs)
+        super(LocalizedIntegerField, self).__init__(
+            models.IntegerField, *args, **kwargs
+        )
