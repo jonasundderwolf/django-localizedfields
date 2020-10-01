@@ -2,6 +2,7 @@ from composite_field.base import CompositeField
 from django.conf import settings
 from django.db import models
 from django.utils import translation
+from django.utils.functional import lazy
 
 from .utils import (
     SHORT_LANGUAGES,
@@ -70,7 +71,9 @@ class LocalizedField(CompositeField):
             self.verbose_name = field_name.replace("_", " ").capitalize()
 
         for language in self:
-            self[language].verbose_name = "%s (%s)" % (self.verbose_name, language)
+            self[language].verbose_name = lazy(
+                lambda language: self.verbose_name + " (" + language + ")", str
+            )(language)
             # Save a reference to the composite field for later use
             self[language].composite_field = self
 
@@ -117,26 +120,12 @@ class LocalizedField(CompositeField):
     def set(self, model, value):
         from django.utils.functional import Promise
 
+        language = short_language()
         # XXX is there a better way to detect ugettext_lazy objects?
         if isinstance(value, Promise):
-            d = {}
-            for language in self:
-                with translation.override(language):
-                    d[language] = str(value)
-            value = d
-        return super(LocalizedField, self).set(model, value)
-
-    # overwrite _set method of CompositeField inner class Proxy
-    class Proxy(CompositeField.Proxy):
-        def _set(self, values):
-            if isinstance(values, dict):
-                for name in self._composite_field:
-                    subfield_name = self._composite_field.prefix + name
-                    setattr(self._model, subfield_name, values[name])
-            else:
-                for name in self._composite_field:
-                    subfield_name = self._composite_field.prefix + name
-                    setattr(self._model, subfield_name, values)
+            with translation.override(language):
+                value = str(value)
+        setattr(model, self.prefix + short_language(), value)
 
 
 class LocalizedCharField(LocalizedField):
