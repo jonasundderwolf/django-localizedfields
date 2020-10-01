@@ -126,6 +126,18 @@ class LocalizedField(CompositeField):
             value = d
         return super(LocalizedField, self).set(model, value)
 
+    # overwrite _set method of CompositeField inner class Proxy
+    class Proxy(CompositeField.Proxy):
+        def _set(self, values):
+            if isinstance(values, dict):
+                for name in self._composite_field:
+                    subfield_name = self._composite_field.prefix + name
+                    setattr(self._model, subfield_name, values[name])
+            else:
+                for name in self._composite_field:
+                    subfield_name = self._composite_field.prefix + name
+                    setattr(self._model, subfield_name, values)
+
 
 class LocalizedCharField(LocalizedField):
     def __init__(self, *args, **kwargs):
