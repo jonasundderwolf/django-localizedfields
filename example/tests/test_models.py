@@ -2,6 +2,8 @@
 import pytest
 from django.utils.translation import activate, override
 
+from .factories import DocumentFactory
+
 
 @pytest.mark.django_db
 def test_simple_language_switch(document):
@@ -29,3 +31,22 @@ def test_translated_fields(document):
         "decimalfield",
         "integerfield",
     ]
+
+
+@pytest.mark.django_db
+def test_set_fields():
+    """
+    Ensure direct assignment to fields does not throw an error.
+    """
+
+    document = DocumentFactory.create(
+        charfield="some chars",
+        textfield="some text",
+        decimalfield=0.0815,
+        integerfield=42,
+    )
+
+    assert document.charfield == "some chars"
+    assert document.textfield == "some text"
+    assert document.decimalfield == 0.0815
+    assert document.integerfield == 42

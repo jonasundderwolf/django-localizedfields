@@ -1,5 +1,5 @@
 Pillow
-django==2.2.16
+django>=2.2,<3.0
 django-composite-field==1.1.0
 pytest
 pytest-django
@@ -7,3 +7,4 @@ pytest-factoryboy
 pytest-cov
 pytest-isort
 pytest-black
+black==20.8b1
