@@ -1,4 +1,7 @@
 (function ($) {
+    // Shortcut, if there isn't any change form
+    if (!$('body').hasClass('change-form')) return;
+
     var LOCALIZED_FIELDS, ADMIN_URL, $translation_field;
 
     $.holdReady(true);
@@ -23,10 +26,8 @@
         });
 
     $(function () {
-        // Shortcut, if there isn't any change form
-        if (!LOCALIZED_FIELDS || !$('body').hasClass('change-form')) {
-            return;
-        }
+        // Shortcut, if there isn't any data
+        if (!LOCALIZED_FIELDS) return;
 
         $translation_field = $('div.field-translated_languages input');
 
