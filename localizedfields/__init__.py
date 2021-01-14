@@ -14,4 +14,4 @@ from .fields import (
 )
 from .utils import localized_field
 
-__version__ = "0.16"
+__version__ = "0.17"
