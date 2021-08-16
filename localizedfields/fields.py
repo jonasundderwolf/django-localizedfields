@@ -121,7 +121,7 @@ class LocalizedField(CompositeField):
         from django.utils.functional import Promise
 
         language = short_language()
-        # XXX is there a better way to detect ugettext_lazy objects?
+        # XXX is there a better way to detect gettext_lazy objects?
         if isinstance(value, Promise):
             with translation.override(language):
                 value = str(value)
