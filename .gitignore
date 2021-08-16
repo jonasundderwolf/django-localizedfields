@@ -7,3 +7,4 @@
 *.tox/*
 example/media/*
 .idea
+.DS_Store
